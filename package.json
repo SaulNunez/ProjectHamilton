@@ -1,0 +1,17 @@
+{
+  "name": "hamilton_server",
+  "version": "1.0.0",
+  "description": "Servidor para el Project Hamilton",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest test"
+  },
+  "author": "Saul Nunez",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "knex": "^0.21.2",
+    "mysql": "^2.18.1",
+    "ws": "^7.3.1"
+  }
+}

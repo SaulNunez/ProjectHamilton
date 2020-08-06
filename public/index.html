@@ -15,28 +15,32 @@
                 <div>
                     <p>Crea un hub para tu clase.</p>
                     <p id="hubCode"></p>
-                    <button id="crear_hub">Crear hub</button>
+                    <button class="button" id="crear_hub" onclick="createHub()">Crear hub</button>
                 </div>
                 <p></p>
             </div>
             <div id="seccion_unir_hub">
                 <h1>Alumnos</h1>
                 <p>Conectate al lobby de tu profesor.</p>
-                <a class="button" href="./game/index.html" id="unir_hub">Unirse</a>
+                <button class="button" id="unir_hub" onclick="sendToGame()">Unirse</button>
             </div>
             <script>
-                var createHub = document.getElementById("crear_hub");
                 var hubCodeContainer = document.getElementById("hubCode");
         
-                createHub.addEventListener("onclick", function () {
+                function createHub(){
                     fetch('/create_lobby', { method: 'POST' })
-                        .then(function (response) {
-                            hubCodeContainer.innerHTML = response.text();
+                        .then((response) => response.json())
+                        .then(function (data) {
+                            hubCodeContainer.innerHTML = data.code || "";
                         })
                         .then(function (error) {
                             console.error(error);
                         });
-                });
+                }
+
+                function sendToGame(){
+                    window.location.href = "./game/index.html";
+                }
             </script>
         </div>
     </div>

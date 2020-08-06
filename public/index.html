@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/css/home_stylesheet.css" rel="stylesheet" type="text/css" />
+    <title>Project Hamilton</title>
+</head>
+<body>
+    <div>
+        <div>
+            <h1>Project Hamilton</h1>
+            <div id="seccion_crear_hub">
+                <h1>Profesores</h1>
+                <div>
+                    <p>Crea un hub para tu clase.</p>
+                    <p id="hubCode"></p>
+                    <button id="crear_hub">Crear hub</button>
+                </div>
+                <p></p>
+            </div>
+            <div id="seccion_unir_hub">
+                <h1>Alumnos</h1>
+                <p>Conectate al lobby de tu profesor.</p>
+                <a class="button" href="~/game/index.html" id="unir_hub">Unirse</a>
+            </div>
+            <script>
+                var createHub = document.getElementById("crear_hub");
+                var hubCodeContainer = document.getElementById("hubCode");
+        
+                createHub.addEventListener("onclick", function () {
+                    fetch('/create_lobby', { method: 'POST' })
+                        .then(function (response) {
+                            hubCodeContainer.innerHTML = response.text();
+                        })
+                        .then(function (error) {
+                            console.error(error);
+                        });
+                });
+            </script>
+        </div>
+    </div>
+</body>
+</html>

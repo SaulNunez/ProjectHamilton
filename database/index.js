@@ -9,11 +9,11 @@ const db = require('knex')({
 });
 
 db.schema
-    .createTableIfNotExists('lobbies', table => {
+    .createTable('lobbies', table => {
         table.string("code").unique();
         table.dateTime("creation_time");
     })
-    .createTableIfNotExists('items', table => {
+    .createTable('items', table => {
         table.uuid("item_token").unique();
         table.integer("sanity");
         table.integer("physical");
@@ -21,7 +21,7 @@ db.schema
         table.integer("bravery");
         table.string("name");
     })
-    .createTableIfNotExists('players', table => {
+    .createTable('players', table => {
         table.integer("x");
         table.integer("y");
         table.integer("floor");
@@ -36,7 +36,7 @@ db.schema
         table.string("lobby")
         .references("lobbies.code");
     })
-    .createTableIfNotExists('rooms', table => {
+    .createTable('rooms', table => {
         table.integer("x");
         table.integer("y");
         table.integer("floor");

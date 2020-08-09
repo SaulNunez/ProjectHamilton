@@ -31,8 +31,9 @@ db.schema
         table.integer("bravery");
         table.integer("turn_throw");
         table.integer("current_movement_throw");
-        table.uuid("server_token");
+        table.uuid("token");
         table.string("name");
+        table.string("character");
         table.string("lobby")
         .references("lobbies.code");
     })

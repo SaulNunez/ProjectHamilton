@@ -1,7 +1,6 @@
 const express = require('express');
 const WebSocket = require('ws');
 const app = express();
-const port = 3000;
 
 import db from './database/index.js';
 
@@ -114,4 +113,4 @@ wss.on('connection', (ws) => {
 
 });
 
-app.listen(port, () => console.log(`Server running in port ${port}`));
+app.listen(process.env.PORT || 3000, () => console.log(`Server running in port ${port}`));

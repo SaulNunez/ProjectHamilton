@@ -1,33 +1,43 @@
 <!DOCTYPE html>
 
 <html>
+
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="./css/home_stylesheet.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <title>Project Hamilton</title>
 </head>
+
 <body>
-    <div>
+    <div class="container">
         <div>
             <h1>Project Hamilton</h1>
-            <div id="seccion_crear_hub">
-                <h1>Profesores</h1>
-                <div>
-                    <p>Crea un hub para tu clase.</p>
-                    <p id="hubCode"></p>
-                    <button class="button" id="crear_hub" onclick="createHub()">Crear hub</button>
+            <div class="card" id="seccion_crear_hub">
+                <div class="card-body">
+                    <h1 class="card-title">Profesores</h1>
+                    <div>
+                        <p>Crea un hub para tu clase.</p>
+                        <p id="hubCode"></p>
+                        <button type="button" class="btn btn-primary id=" crear_hub" onclick="createHub()">Crear
+                            hub</button>
+                    </div>
+                    <p></p>
                 </div>
-                <p></p>
             </div>
-            <div id="seccion_unir_hub">
-                <h1>Alumnos</h1>
-                <p>Conectate al lobby de tu profesor.</p>
-                <button class="button" id="unir_hub" onclick="sendToGame()">Unirse</button>
+            <div class="card" id="seccion_unir_hub">
+                <div class="card-body">
+                    <h1 class="card-title">Alumnos</h1>
+                    <p>Conectate al lobby de tu profesor.</p>
+                    <a type="button" class="btn btn-primary" id="unir_hub" href="./game/index.html" role="button">Unirse</a>
+                </div>
             </div>
             <script>
                 var hubCodeContainer = document.getElementById("hubCode");
-        
-                function createHub(){
+
+                function createHub() {
                     fetch('/create_lobby', { method: 'POST' })
                         .then((response) => response.json())
                         .then(function (data) {
@@ -37,12 +47,19 @@
                             console.error(error);
                         });
                 }
-
-                function sendToGame(){
-                    window.location.href = "./game/index.html";
-                }
             </script>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>

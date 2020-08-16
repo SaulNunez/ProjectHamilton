@@ -25,6 +25,7 @@ app.post("/create_lobby", (request, response) => {
 app.ws('/gameapi', function(ws, req) {
     ws.on('message', async (message) => {
         const messageContents = JSON.parse(message);
+        console.log(`Message received: ${message}`);
     
         switch(messageContents.type){
             case 'enter_lobby':

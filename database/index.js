@@ -1,6 +1,6 @@
 const host = process.env.DB_HOST_URL;
 const user = process.env.DB_USER;
-const password = proces.env.DB_PASSWORD;
+const password = process.env.DB_PASSWORD;
 
 if(host === null){
     console.error("DB host not set.");

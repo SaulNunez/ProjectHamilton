@@ -36,7 +36,7 @@ wss.on('connection', (ws) => {
     
         switch(messageContents.type){
             case 'enter_lobby':
-                const [lobbyCode] = messageContents.payload;
+                const { lobbyCode } = messageContents.payload;
                 
                 try {
                     const results = await db('lobbies').select('code').where({code: lobbyCode});

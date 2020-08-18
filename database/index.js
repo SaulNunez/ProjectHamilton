@@ -1,10 +1,27 @@
+const host = process.env.DB_HOST_URL;
+const user = process.env.DB_USER;
+const password = proces.env.DB_PASSWORD;
+
+if(host === null){
+    console.error("DB host not set.");
+}
+
+if(user === null){
+    console.error("DB user not set.");
+}
+
+if(password === null){
+    console.error("DB password not set.");
+}
+
 const db = require('knex')({
     client: 'mysql',
     connection: {
-        host: 'PersistDb',
-        user: 'Temp',
-        password: 'password',
-        database: 'ProjectHamilton'
+        host: host,
+        user: user,
+        password: password,
+        database: 'ProjectHamilton',
+        port: 3306
     }
 });
 

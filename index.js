@@ -31,8 +31,9 @@ app.ws('/gameapi', function(ws, req) {
             case 'enter_lobby':
                 const [lobbyCode] = messageContents.payload;
                 
-                const results = await db('lobbies').select('code').where({code: lobbyCode});
                 try {
+                    const results = await db('lobbies').select('code').where({code: lobbyCode});
+
                     if(results.length > 0){
                         const playerInfoQuery = await db('players').select('character', 'name').where({lobby: lobbyCode});
     

@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
-
-var expressWs = require('express-ws')(app);
+const { Server } = require('ws');
 
 import db from './database/index.js';
 
@@ -22,7 +21,15 @@ app.post("/create_lobby", (request, response) => {
     }
 });
 
-app.ws('/gameapi', function(ws, req) {
+app.use(express.static('public'));
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => console.log(`Server running on port ${port}`));
+
+const wss = new Server({ server: app });
+
+wss.on('connection', (ws) => {
     ws.on('message', async (message) => {
         const messageContents = JSON.parse(message);
         console.log(`Message received: ${message}`);
@@ -110,9 +117,3 @@ app.ws('/gameapi', function(ws, req) {
         }
   });
 });
-
-app.use(express.static('public'));
-
-const port = process.env.PORT || 3000;
-
-app.listen(port, () => console.log(`Server running on port ${port}`));

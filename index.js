@@ -5,7 +5,6 @@ const { Server } = require('ws');
 import db from './database/index.js';
 import { createLobby, joinLobby } from './gameapi/lobbies';
 import { selectCharacter } from './gameapi/characters';
-import { json } from 'express';
 
 app.post("/create_lobby", (request, response) => {
     const lobbyCode = createLobby();
@@ -44,7 +43,7 @@ wss.on('connection', (ws) => {
             case "select_character":
                 const {token, displayName, character, lobbyCode} = messageContents.payload;
 
-                const selectCharacter = await selectCharacter(token, displayName, character);
+                const characterSelected = await selectCharacter(token, displayName, character);
                 ws.send(JSON.stringify({
                     type: 'player_selection_sucess'}));
 

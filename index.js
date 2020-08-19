@@ -25,9 +25,9 @@ app.use(express.static('public'));
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+const server =  app.listen(port, () => console.log(`Server running on port ${port}`));
 
-const wss = new Server({ server: app });
+const wss = new Server({ server });
 
 wss.on('connection', (ws) => {
     ws.on('message', async (message) => {

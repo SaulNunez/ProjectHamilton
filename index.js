@@ -46,7 +46,7 @@ wss.on('connection', (ws) => {
     
                         const tokenInfo = await db.insert({lobby: lobbyCode}, 'token').into('players');
         
-                        ws.send({
+                        ws.send(JSON.stringify({
                             type: 'lobby_joined',
                             payload: {
                                 currentPlayers: playerInfoQuery.length,
@@ -54,18 +54,18 @@ wss.on('connection', (ws) => {
                                 playersInLobbyInfo: playerInfoQuery,
                                 token: tokenInfo.token
                             }
-                        });
+                        }));
                     } else {
-                        ws.send({
+                        ws.send(JSON.stringify({
                             type: 'lobby_joined',
                             error: 'There\'s no lobby found with that code'
-                        });
+                        }));
                     }
                 } catch(error){
-                    ws.send({
+                    ws.send(JSON.stringify({
                         type: 'lobby_joined',
                         error: error.message
-                    });
+                    }));
                 }
     
                 break;
@@ -74,19 +74,19 @@ wss.on('connection', (ws) => {
                     const [lobbyCode] = messageContents.payload;
                     const playerInfoQuery = await db('players').select('character', 'name').where({lobby: lobbyCode});
     
-                    ws.send({
+                    ws.send(JSON.stringify({
                         type: 'available_characters_update',
                         payload: {
                             currentPlayers: playerInfoQuery.length,
                             charactersUsed: playerInfoQuery.map(playerInfo => playerInfo.character).filter(player => player),
                             playersInLobbyInfo: playerInfoQuery,
                         }
-                    });
+                    }));
                 } catch(error){
-                    ws.send({
+                    ws.send(JSON.stringify({
                         type: 'available_characters_update',
                         error: error.message
-                    });
+                    }));
                 }
                 break;
             case "select_character":
@@ -94,19 +94,19 @@ wss.on('connection', (ws) => {
     
                 db('players').where('token', '=', token).update({name: displayName, character: character});
     
-                ws.send({
+                ws.send(JSON.stringify({
                     type: 'player_selection_sucess'
-                });
+                }));
     
                 const playerInfoQuery = await db('players').select('character', 'name', 'x', 'y', 'floor').where({lobby: lobbyCode});
-                const data ={
+                const data = JSON.stringify({
                     type: 'player_selected_character',
                     payload: {
                         currentPlayers: playerInfoQuery.length,
                         playersInLobbyInfo: playerInfoQuery.map(({name, character})  => ({name, character})),
                         playersPosition: playerInfoQuery.map(({character, x, y, floor}) => ({character, x, y, floor}))
                     }
-                };
+                });
     
                 wss.clients.forEach(function each(client) {
                     if (client !== ws && client.readyState === WebSocket.OPEN) {

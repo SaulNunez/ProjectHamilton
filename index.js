@@ -52,7 +52,7 @@ wss.on('connection', (ws) => {
                     type: 'player_selected_character',
                     payload: await getAvailableCharacters(lobbyCode)
                 });
-                wss.clients.forEach(function each(client) {
+                wss.clients.forEach((client) => {
                     if (client !== ws && client.readyState === WebSocket.OPEN) {
                         client.send(charactersUpdateInfo);
                     }

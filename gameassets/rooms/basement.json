@@ -1,0 +1,156 @@
+[
+    {   
+        "name": "Cuarto de almacenamiento",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Calentadores de agua",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": false
+        },
+        "specialEvent": "item",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Elevador",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto colapsado",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": {
+            "sanity": 0,
+            "physical": -1,
+            "intelligence": 0,
+            "bravery": 0
+        },
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de vinos",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "item",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de monstruos",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de tesoro",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de armamento",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Lago subterraneo",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cripta",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de tiradero",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto sangriento",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": {
+            "sanity": -1,
+            "physical": 0,
+            "intelligence": 0,
+            "bravery": 0
+        },
+        "movesToFloor": []
+    }
+]

@@ -1,0 +1,175 @@
+[
+    {
+        "name": "Comedor",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name":"Cuarto de baile",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": false
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cocina",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": false
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de lavado",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Conservatorio",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": false,
+            "top": false
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Jardín",
+        "adjacentRooms": {
+            "left": false,
+            "right": false,
+            "bottom": true,
+            "top": false
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de recreación",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de conservas",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "item",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Taller",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Baño",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "item",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto del mayordomo",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "item",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Elevador",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": [0, 1, 2]
+    },
+    {
+        "name": "Entrada",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": [2]
+    },
+    {
+        "name": "Cuarto colapsado",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": {
+            "sanity": 0,
+            "physical": -1,
+            "intelligence": 0,
+            "bravery": 0
+        },
+        "movesToFloor": [0]
+    }
+]

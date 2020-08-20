@@ -1,20 +1,18 @@
 import db from '../../database';
 
-const rooms = require('../../gameassets/rooms');
+const rooms = require('../../gameassets/rooms/main_floor.json');
 
 export async function createLobby() {
     try {
         let lobbyCode = Math.random().toString(36).substring(7);
 
-        const ret = await db("lobbies").insert({code: lobbyCode}).returning('code');
+        await db("lobbies").insert({code: lobbyCode}).returning('code');
 
-        if(ret){
-            rooms.foreach(room => {
+        rooms.foreach(room => {
 
-            });
+        });
 
-            return lobbyCode;
-        }
+        return lobbyCode;
     } catch (e) {
         console.error(e);
     }

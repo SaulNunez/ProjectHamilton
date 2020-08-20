@@ -1,0 +1,206 @@
+[
+    {
+        "name": "Librería",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Gimnasio",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Oficina",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de los niños",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Enfermería",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de huespedes",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de almacenamiento",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Piso con agujero",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": [1]
+    },
+    {
+        "name": "Vault",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Terraza",
+        "adjacentRooms": {
+            "left": false,
+            "right": true,
+            "bottom": false,
+            "top": false
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Biblioteca",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de descanso",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Laboratorio",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Cuarto de juegos",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "item",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "name": "Elevador",
+        "adjacentRooms": {
+            "left": false,
+            "right": false,
+            "bottom": true,
+            "top": false
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": [0, 1, 2]
+    },
+    {
+        "name": "Escaleras",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": [1]
+    }
+]

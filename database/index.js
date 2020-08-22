@@ -33,10 +33,7 @@ db.schema
     .createTable('items', table => {
         table.uuid("id").unique();
         table.uuid("player_id").references("players.id");
-        table.integer("sanity_effect").notNullable().defaultTo(0);
-        table.integer("physical_effect").notNullable().defaultTo(0);
-        table.integer("intelligence_effect").notNullable().defaultTo(0);
-        table.integer("bravery_effect").notNullable().defaultTo(0);
+        table.integer("prototype");
         table.string("name");
     })
     .createTable('players', table => {

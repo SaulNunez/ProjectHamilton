@@ -5,6 +5,7 @@ const { Server } = require('ws');
 import db from './database/index.js';
 import { createLobby, joinLobby } from './gameapi/lobbies';
 import { selectCharacter } from './gameapi/characters';
+import { moveDirection } from './gameapi/gamesession';
 
 app.post("/create_lobby", (request, response) => {
     const lobbyCode = createLobby();
@@ -56,6 +57,33 @@ wss.on('connection', (ws) => {
                         client.send(charactersUpdateInfo);
                     }
                 });
+                break;
+            case "select_item":
+                const { itemId } = messageContents.payload;
+                
+                break;
+            case "move_direction":
+                const {direction, playerToken} = messageContents.payload;
+                try{
+                    const result = moveDirection(playerToken, direction);
+
+                    const characterPositionUpdate = JSON.stringify({
+                        player: result.player,
+                        x: result.x, 
+                        y: result.y
+                    });
+                    wss.clients.forEach((client) => {
+                        if (client !== ws && client.readyState === WebSocket.OPEN) {
+                            client.send(characterPositionUpdate);
+                        }
+                    });
+                } catch(e){
+                    ws.send(JSON.stringify({
+                        message: e
+                    }));
+                }
+                break;
+            case "puzzle_solved":
                 break;
         }
     });

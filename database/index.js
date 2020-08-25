@@ -59,11 +59,7 @@ db.schema
         table.integer("floor").notNullable();
         table.string("lobby_id")
             .references("lobbies.code");
-        table.enu("gameplay_effect", ["none", "puzzle", "item", "event"]);
-        table.integer("stat_effects_physical").notNullable().defaultTo(0);
-        table.integer("stat_effects_sanity").notNullable().defaultTo(0);
-        table.integer("stat_effects_intelligence").notNullable().defaultTo(0);
-        table.integer("stat_effects_bravery").notNullable().defaultTo(0);
+        table.string("room_proto");
     });
 
 export default db;

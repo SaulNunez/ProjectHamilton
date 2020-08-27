@@ -4,15 +4,23 @@ export function getAvailableCharacters(lobbyCode) {
     try {
         const playerInfoQuery = await db('players').select('character', 'name').where({ lobby: lobbyCode });
 
-        const availableCharacters = characters
-            .filter(character => !playerInfoQuery.find(x => x.name === character.name));
+        const availableCharactersInfo = characters
+            .filter(character => !playerInfoQuery.find(x => x.name === character.name))
+            .map(characterData => ({
+                prototypeId: "a",
+                name: characterData.name,
+                description: characterData.description,
+                sanity: characterData.stats.sanity,
+                intelligence: characterData.stats.intelligence,
+                physical: characterData.stats.physical,
+                bravery: characterData.stats.bravery
+            }));
 
         return {
             type: 'available_characters_update',
             payload: {
                 currentPlayers: playerInfoQuery.length,
-                charactersUsed: availableCharacters.map(x => x.name),
-                playersInLobbyInfo: playerInfoQuery,
+                charactersAvailable: availableCharactersInfo
             }
         };
     } catch (error) {

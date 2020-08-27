@@ -1,8 +1,22 @@
 [
     {
-
+        "name":"",
+        "description": "",
+        "stats": {
+            "bravery": 0,
+            "sanity": 0,
+            "intelligence": 0,
+            "physical": 0
+        } 
     },
     {
-        
+        "name":"",
+        "description": "",
+        "stats": {
+            "bravery": 0,
+            "sanity": 0,
+            "intelligence": 0,
+            "physical": 0
+        }
     }
 ]

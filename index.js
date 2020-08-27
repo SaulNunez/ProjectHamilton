@@ -42,11 +42,11 @@ wss.on('connection', (ws) => {
                 }));
                 break;
             case "select_character":
-                const {token, displayName, character, lobbyCode} = messageContents.payload;
+                const {displayName, character, lobbyCode} = messageContents.payload;
 
-                const characterSelected = await selectCharacter(token, displayName, character);
+                const characterSelected = await selectCharacter(lobbyCode, displayName, character);
                 ws.send(JSON.stringify({
-                    type: 'player_selection_sucess'}));
+                    type: 'player_selection_sucess', payload: characterSelected }));
 
                 const charactersUpdateInfo = JSON.stringify({
                     type: 'player_selected_character',

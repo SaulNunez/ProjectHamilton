@@ -47,10 +47,13 @@ db.schema
         table.integer("bravery").notNullable();
         table.integer("turn_throw");
         table.integer("current_movement_throw");
-        table.string("name");
-        table.string("character");
+        table.string("display_name");
+        table.string("character_prototype_id");
+        table.string("character_name");
         table.string("lobby_id")
         .references("lobbies.code");
+
+        table.unique(['lobby_id', 'character_prototype_id']);
     })
     .createTable('rooms', table => {
         table.uuid("id");

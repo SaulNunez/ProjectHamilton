@@ -1,3 +1,5 @@
+import db from '../../database';
+
 const characters = require('../../gameassets/characters');
 
 export function getAvailableCharacters(lobbyCode) {
@@ -31,10 +33,26 @@ export function getAvailableCharacters(lobbyCode) {
     }
 }
 
-export async function selectCharacter(token, displayName, character) {
-    await db('players').where('token', '=', token).update({ name: displayName, character: character });
+export async function selectCharacter(lobbyCode, displayName, character) {
+    const characterList = require('../../gameassets/characters/index.json');
+    const selectedCharacter = characterList.find(x => x.id === character);
 
-    const playerInfoQuery = await db('players').select('character', 'name', 'x', 'y', 'floor').where({ lobby: lobbyCode });
+    if(selectedCharacter){
+        const [playerToken] = await db.insert({
+            sanity: selectedCharacter.stats.sanity, 
+            physical: selectedCharacter.stats.physical, 
+            intelligence: selectedCharacter.stats.intelligence, 
+            bravery: selectedCharacter.stats.bravery, 
+            character_prototype_id: selectedCharacter.id, 
+            characterName: selectedCharacter.character_name,
+            lobby_id: lobbyCode,
+            display_name: displayName
+        }, ['id']).into('players');
+
+        return {
+            playerSecretToken: playerToken
+        }
+    }
 
     return true;
 }

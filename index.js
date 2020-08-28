@@ -29,13 +29,13 @@ wss.on('connection', (ws) => {
         const messageContents = JSON.parse(message);
         console.log(`Message received: ${message}`);
 
+        const { lobbyCode } = messageContents.payload;
+
         switch (messageContents.type) {
             case 'enter_lobby':
-                const { lobbyCode } = messageContents.payload;
                 ws.send(JSON.stringify(await joinLobby(lobbyCode)));
                 break;
             case "get_available_characters":
-                const { lobbyCode } = messageContents.payload;
                 ws.send(JSON.stringify({
                     type: 'player_selected_character',
                     payload: await getAvailableCharacters(lobbyCode)

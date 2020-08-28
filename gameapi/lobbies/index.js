@@ -53,9 +53,9 @@ export async function createLobby() {
     try {
         let lobbyCode = Math.random().toString(36).substring(7);
 
-        await db("lobbies").insert({ code: lobbyCode }).returning('code');
+        await db.insert({ code: lobbyCode }, ['code']).into("lobbies");
 
-        createRooms(lobbyCode)
+        createRooms(lobbyCode);
 
         return lobbyCode;
     } catch (e) {

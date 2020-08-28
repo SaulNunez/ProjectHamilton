@@ -16,7 +16,7 @@
             height: "100%";
             padding: 3rem;
         }
-        
+
         .container div {
             margin: 0.5rem;
         }
@@ -37,20 +37,16 @@
     <nav class="navbar navbar-light bg-light">
         <a class="navbar-brand" href="#">Toolbox</a>
     </nav>
-    <div class="container">
-        <div class="card bg-light">
-            <div class="card-header">Blocky</div>
-            <div class="card-body">
-                <div id="code_editor"></div>
-                <button type="button" class="btn btn-primary btn-lg" onclick="onGetXML">Obtener XML</button>
-            </div>  
-        </div>
-        <div class="card bg-light">
-            <div class="card-header">XML de editor</div>
-            <div class="card-body">
-                <output id="code_box"></div>
-            </div>
-        </div>
+
+    <div class="container-fluid">
+        <h2>Blocky</h2>
+        <div id="code_editor"></div>
+        <button type="button" class="btn btn-primary btn-lg mt-2" onclick="getXml()">Obtener XML del editor</button>
+    </div>
+    <div class="container-fluid">
+        <h2>Codigo del editor</h2>
+        <textarea class="text-monospace" id="code_box"></textarea>
+        <button type="button" class="btn btn-primary btn-lg mt-2" onclick="setXml()">Establecer XML del editor</button>
     </div>
 
     <xml id="toolbox" style="display: none">
@@ -68,17 +64,23 @@
     <script src="/blockly/javascript_compressed.js"></script>
     <script src="/blockly/msg/js/es.js"></script>
     <script>
-        const  blockyContainer = document.getElementById('code_editor');
-        const workspace = Blockly.inject(blockyContainer,
+        var blockyContainer = document.getElementById('code_editor');
+        var workspace = Blockly.inject(blockyContainer,
             { toolbox: document.getElementById('toolbox') });
-        const parser = new XMLSerializer();
-        const workspaceOutput = document.getElementById('code_box');
+        var workspaceOutput = document.getElementById('code_box');
 
-        function onGetXML(){
-            let xml = Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace());
-            let workspaceToString = xml.serializeToString(xmlObject.documentElement);
+        function getXml() {
+            var xml = Blockly.Xml.workspaceToDom(workspace);
+            var xmlText = Blockly.Xml.domToText(xml);
 
-            workspaceOutput.innerHTML = workspaceToString;
+            workspaceOutput.appendChild(document.createTextNode(xmlText));
+        }
+
+        function setXml(){
+            var text = workspaceOutput.innerHTML;
+
+            var xml = Blockly.Xml.textToDom(text);
+            Blockly.Xml.domToWorkspace(xml, workspace);
         }
     </script>
 

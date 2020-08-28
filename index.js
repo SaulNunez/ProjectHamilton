@@ -7,8 +7,8 @@ import { createLobby, joinLobby } from './gameapi/lobbies';
 import { selectCharacter } from './gameapi/characters';
 import { moveDirection } from './gameapi/gamesession';
 
-app.post("/create_lobby", (request, response) => {
-    const lobbyCode = createLobby();
+app.post("/create_lobby", async (request, response) => {
+    const lobbyCode = await createLobby();
     if (lobbyCode) {
         response.send({ code: lobbyCode });
     } else {

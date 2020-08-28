@@ -15,7 +15,7 @@ if(password === null){
 }
 
 const db = require('knex')({
-    client: 'mysql',
+    client: 'postgres',
     connection: {
         host: host,
         user: user,

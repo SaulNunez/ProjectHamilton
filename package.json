@@ -4,7 +4,7 @@
   "description": "Servidor para el Project Hamilton",
   "main": "index.js",
   "scripts": {
-    "test": "jest test",
+    "test": "jest",
     "start": "node -r esm index.js"
   },
   "author": "Saul Nunez",

@@ -3,7 +3,7 @@ import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../gamesession/constants';
 
 function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
     //Mejorar algoritmo, tenemos que tener en consideracion las puertas que tiene el prototipo del cuarto.
-    knex.transaction(async (dbTransaction) => {
+    db.transaction(async (dbTransaction) => {
         floorRooms.foreach(async room => {
             const pos = mainFloorOutline[Math.floor(Math.random() * mainFloorOutline.length)];
             house.topFloor.set(pos, room);

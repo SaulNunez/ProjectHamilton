@@ -2,11 +2,11 @@
 exports.up = function(knex) {
   return knex.schema
   .createTable('lobbies', table => {
-      table.string("code").unique();
+      table.string("code").primary().notNullable();
       table.timestamp('creation_time').notNullable().defaultTo(knex.fn.now());
   })
   .createTable('players', table => {
-    table.uuid("id");
+    table.uuid("id").primary().notNullable();
     table.integer("x").notNullable().defaultTo(0);
     table.integer("y").notNullable().defaultTo(0);
     table.integer("floor").notNullable().defaultTo(0);
@@ -25,13 +25,13 @@ exports.up = function(knex) {
     table.unique(['lobby_id', 'character_prototype_id']);
 })
   .createTable('items', table => {
-      table.uuid("id").unique();
+      table.uuid("id").primary().notNullable();
       table.uuid("player_id").references("players.id");
       table.integer("prototype");
       table.string("name");
   })
   .createTable('rooms', table => {
-      table.uuid("id");
+      table.uuid("id").primary().notNullable();
       table.integer("x").notNullable();
       table.integer("y").notNullable();
       table.integer("floor").notNullable();

@@ -40,7 +40,7 @@ async function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
     });
 }
 
-function createRooms(lobbyCode) {
+async function createRooms(lobbyCode) {
     const mainFloorRooms = require('../../gameassets/rooms/main_floor.json');
     await populateFloor(lobbyCode, mainFloorRooms, MAIN_FLOOR);
 

@@ -4,7 +4,7 @@ import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../gamesession/constants';
 function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
     //Mejorar algoritmo, tenemos que tener en consideracion las puertas que tiene el prototipo del cuarto.
     db.transaction((dbTransaction) => {
-        floorRooms.foreach(room => {
+        floorRooms.forEach(room => {
             const pos = mainFloorOutline[Math.floor(Math.random() * mainFloorOutline.length)];
             house.topFloor.set(pos, room);
 

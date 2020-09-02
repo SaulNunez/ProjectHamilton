@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const { Server } = require('ws');
 
-import db from './database/index.js';
 import { createLobby, joinLobby } from './gameapi/lobbies';
 import { selectCharacter } from './gameapi/characters';
 import { moveDirection } from './gameapi/gamesession';
@@ -33,44 +32,66 @@ wss.on('connection', (ws) => {
 
         switch (messageContents.type) {
             case 'enter_lobby':
-                ws.send(JSON.stringify(await joinLobby(lobbyCode)));
+                try{
+                    ws.send(JSON.stringify(await joinLobby(lobbyCode)));
+                } catch(e){
+                    ws.send(JSON.stringify({
+                        type: 'lobby_joined',
+                        error: e.message
+                    }));
+                }
                 break;
             case "get_available_characters":
-                ws.send(JSON.stringify({
-                    type: 'player_selected_character',
-                    payload: await getAvailableCharacters(lobbyCode)
-                }));
+                try {
+                    ws.send(JSON.stringify({
+                        type: 'player_selected_character',
+                        payload: await getAvailableCharacters(lobbyCode)
+                    }));
+                } catch (e) {
+                    ws.send(JSON.stringify({
+                        type: 'player_selected_character',
+                        error: e.message
+                    }));
+                }
                 break;
             case "select_character":
-                const {displayName, character, lobbyCode} = messageContents.payload;
+                try {
+                    const {displayName, character, lobbyCode} = messageContents.payload;
 
-                const characterSelected = await selectCharacter(lobbyCode, displayName, character);
-                ws.send(JSON.stringify({
-                    type: 'player_selection_sucess', payload: characterSelected }));
-
-                const charactersUpdateInfo = JSON.stringify({
-                    type: 'player_selected_character',
-                    payload: await getAvailableCharacters(lobbyCode)
-                });
-                wss.clients.forEach((client) => {
-                    if (client !== ws && client.readyState === WebSocket.OPEN) {
-                        client.send(charactersUpdateInfo);
-                    }
-                });
+                    const characterSelected = await selectCharacter(lobbyCode, displayName, character);
+                    ws.send(JSON.stringify({
+                        type: 'player_selection_sucess', payload: characterSelected }));
+    
+                    const charactersUpdateInfo = JSON.stringify({
+                        type: 'player_selected_character',
+                        payload: await getAvailableCharacters(lobbyCode)
+                    });
+                    wss.clients.forEach((client) => {
+                        if (client !== ws && client.readyState === WebSocket.OPEN) {
+                            client.send(charactersUpdateInfo);
+                        }
+                    });
+                } catch (error) {
+                    ws.send(JSON.stringify({
+                        type: 'player_selection_sucess', error: error.message }));
+                }
                 break;
             case "select_item":
                 const { itemId } = messageContents.payload;
                 
                 break;
             case "move_direction":
-                const {direction, playerToken} = messageContents.payload;
                 try{
+                    const {direction, playerToken} = messageContents.payload;
                     const result = moveDirection(playerToken, direction);
 
                     const characterPositionUpdate = JSON.stringify({
-                        player: result.player,
-                        x: result.x, 
-                        y: result.y
+                        type: 'player_moved',
+                        payload: {
+                            player: result.player,
+                            x: result.x, 
+                            y: result.y
+                        }
                     });
                     wss.clients.forEach((client) => {
                         if (client !== ws && client.readyState === WebSocket.OPEN) {
@@ -79,7 +100,8 @@ wss.on('connection', (ws) => {
                     });
                 } catch(e){
                     ws.send(JSON.stringify({
-                        message: e
+                        type: 'player_moved',
+                        error: e.message
                     }));
                 }
                 break;

@@ -1,10 +1,10 @@
 import db from '../../database';
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../gamesession/constants';
 
-async function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
+function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
     //Mejorar algoritmo, tenemos que tener en consideracion las puertas que tiene el prototipo del cuarto.
-    await db.transaction(async (dbTransaction) => {
-        floorRooms.foreach(async room => {
+    db.transaction((dbTransaction) => {
+        floorRooms.foreach(room => {
             const pos = mainFloorOutline[Math.floor(Math.random() * mainFloorOutline.length)];
             house.topFloor.set(pos, room);
 
@@ -29,26 +29,26 @@ async function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
                 }
             });
 
-            await dbTransaction.insert({x, y, 
+            dbTransaction.insert({x, y, 
                 floor: floorToPopulate, 
                 lobby_id: lobbyCode, 
                 room_proto: room.id
             }).into('rooms');
         });
 
-        await dbTransaction.commit();
+        dbTransaction.commit();
     });
 }
 
-async function createRooms(lobbyCode) {
+function createRooms(lobbyCode) {
     const mainFloorRooms = require('../../gameassets/rooms/main_floor.json');
-    await populateFloor(lobbyCode, mainFloorRooms, MAIN_FLOOR);
+    populateFloor(lobbyCode, mainFloorRooms, MAIN_FLOOR);
 
     const topFloorRooms = require('../../gameassets/rooms/second_floor.json');
-    await populateFloor(lobbyCode, topFloorRooms, TOP_FLOOR);
+    populateFloor(lobbyCode, topFloorRooms, TOP_FLOOR);
 
     const basementRooms = require('../../gameassets/rooms/basement.json');
-    await populateFloor(lobbyCode, basementRooms, BASEMENT);
+    populateFloor(lobbyCode, basementRooms, BASEMENT);
 }
 
 export async function createLobby() {
@@ -57,7 +57,7 @@ export async function createLobby() {
 
         await db.insert({ code: lobbyCode }, ['code']).into("lobbies");
 
-        await createRooms(lobbyCode);
+        createRooms(lobbyCode);
 
         return lobbyCode;
     } catch (e) {

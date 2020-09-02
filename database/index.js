@@ -21,7 +21,8 @@ const db = require('knex')({
         user: user,
         password: password,
         database: 'ProjectHamilton',
-        port: 3306
+        port: 3306,
+        connectTimeout: 90000
     }
 });
 

@@ -1,9 +1,9 @@
 import db from '../../database';
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../gamesession/constants';
 
-function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
+async function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
     //Mejorar algoritmo, tenemos que tener en consideracion las puertas que tiene el prototipo del cuarto.
-    db.transaction(async (dbTransaction) => {
+    await db.transaction(async (dbTransaction) => {
         floorRooms.foreach(async room => {
             const pos = mainFloorOutline[Math.floor(Math.random() * mainFloorOutline.length)];
             house.topFloor.set(pos, room);
@@ -35,18 +35,20 @@ function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
                 room_proto: room.id
             }).into('rooms');
         });
+
+        await dbTransaction.commit();
     });
 }
 
 function createRooms(lobbyCode) {
     const mainFloorRooms = require('../../gameassets/rooms/main_floor.json');
-    populateFloor(lobbyCode, mainFloorRooms, MAIN_FLOOR);
+    await populateFloor(lobbyCode, mainFloorRooms, MAIN_FLOOR);
 
     const topFloorRooms = require('../../gameassets/rooms/second_floor.json');
-    populateFloor(lobbyCode, topFloorRooms, TOP_FLOOR);
+    await populateFloor(lobbyCode, topFloorRooms, TOP_FLOOR);
 
     const basementRooms = require('../../gameassets/rooms/basement.json');
-    populateFloor(lobbyCode, basementRooms, BASEMENT);
+    await populateFloor(lobbyCode, basementRooms, BASEMENT);
 }
 
 export async function createLobby() {
@@ -55,7 +57,7 @@ export async function createLobby() {
 
         await db.insert({ code: lobbyCode }, ['code']).into("lobbies");
 
-        createRooms(lobbyCode);
+        await createRooms(lobbyCode);
 
         return lobbyCode;
     } catch (e) {

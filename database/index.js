@@ -23,8 +23,17 @@ const db = require('knex')({
         database: 'ProjectHamilton',
         port: 5432,
         connectTimeout: 90000
-    }
+    },
+    log: {
+        warn: (message) =>  {
+            console.warn(message);
+        },
+        error: (message) => {
+            console.error(message);
+        }
+      }
 });
+
 
 db.schema
     .createTable('lobbies', table => {

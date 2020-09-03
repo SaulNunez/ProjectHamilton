@@ -72,7 +72,7 @@ export async function joinLobby(lobbyCode) {
         const results = await db('lobbies').select('code').where({ code: lobbyCode });
 
         if (results.length > 0) {
-            const playerInfoQuery = await db('players').select('character', 'name').where({ lobby: lobbyCode });
+            const playerInfoQuery = await db('players').select('character_name', 'name').where({ lobby: lobbyCode });
 
             const tokenInfo = await db.insert({ lobby: lobbyCode }, 'token').into('players');
 
@@ -80,7 +80,7 @@ export async function joinLobby(lobbyCode) {
                 type: 'lobby_joined',
                 payload: {
                     currentPlayers: playerInfoQuery.length,
-                    charactersUsed: playerInfoQuery.map(playerInfo => playerInfo.character).filter(player => player),
+                    charactersUsed: playerInfoQuery.map(playerInfo => playerInfo.character_name).filter(player => player),
                     playersInLobbyInfo: playerInfoQuery,
                     token: tokenInfo.token
                 }

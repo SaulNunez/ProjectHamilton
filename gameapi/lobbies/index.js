@@ -1,5 +1,6 @@
 import db from '../../database';
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../gamesession/constants';
+import { v4 as uuidv4 } from 'uuid';
 
 function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
     //Mejorar algoritmo, tenemos que tener en consideracion las puertas que tiene el prototipo del cuarto.
@@ -74,7 +75,7 @@ export async function joinLobby(lobbyCode) {
         if (results.length > 0) {
             const playerInfoQuery = await db('players').select('character_name', 'display_name').where({ lobby_id: lobbyCode });
 
-            const tokenInfo = await db.insert({ lobby_id: lobbyCode }, 'id').into('players');
+            const tokenInfo = await db.insert({ lobby_id: lobbyCode, id: uuidv4() }, 'id').into('players');
 
             return {
                 type: 'lobby_joined',

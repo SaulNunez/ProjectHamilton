@@ -75,7 +75,12 @@ export async function joinLobby(lobbyCode) {
         if (results.length > 0) {
             const playerInfoQuery = await db('players').select('character_name', 'display_name').where({ lobby_id: lobbyCode });
 
-            const tokenInfo = await db.insert({ lobby_id: lobbyCode, id: uuidv4() }, 'id').into('players');
+            const tokenInfo = await db.insert({ lobby_id: lobbyCode, 
+                id: uuidv4(),
+                sanity: 0,
+                physical: 0,
+                intelligence: 0,
+                bravery: 0 }, 'id').into('players');
 
             return {
                 type: 'lobby_joined',

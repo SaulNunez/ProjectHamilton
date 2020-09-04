@@ -48,10 +48,10 @@ wss.on('connection', (ws) => {
                         payload: await getAvailableCharacters(lobbyCode)
                     }));
                 } catch (error) {
-                    return {
+                    ws.send(JSON.stringify({
                         type: 'available_characters_update',
                         error: error.message
-                    };
+                    }));
                 }
                 break;
             case "select_character":

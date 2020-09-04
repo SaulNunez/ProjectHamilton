@@ -3,7 +3,7 @@ const app = express();
 const { Server } = require('ws');
 
 import { createLobby, joinLobby } from './gameapi/lobbies';
-import { selectCharacter } from './gameapi/characters';
+import { selectCharacter, getAvailableCharacters } from './gameapi/characters';
 import { moveDirection } from './gameapi/gamesession';
 
 app.post("/create_lobby", async (request, response) => {
@@ -44,14 +44,14 @@ wss.on('connection', (ws) => {
             case "get_available_characters":
                 try {
                     ws.send(JSON.stringify({
-                        type: 'player_selected_character',
+                        type: 'available_characters_update',
                         payload: await getAvailableCharacters(lobbyCode)
                     }));
-                } catch (e) {
-                    ws.send(JSON.stringify({
-                        type: 'player_selected_character',
-                        error: e.message
-                    }));
+                } catch (error) {
+                    return {
+                        type: 'available_characters_update',
+                        error: error.message
+                    };
                 }
                 break;
             case "select_character":

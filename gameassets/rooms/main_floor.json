@@ -1,149 +1,6 @@
 [
     {
-        "name": "Comedor",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": true
-        },
-        "specialEvent": null,
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name":"Cuarto de baile",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": false
-        },
-        "specialEvent": "puzzle",
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Cocina",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": false
-        },
-        "specialEvent": null,
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Cuarto de lavado",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": true
-        },
-        "specialEvent": null,
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Conservatorio",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": false,
-            "top": false
-        },
-        "specialEvent": null,
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Jardín",
-        "adjacentRooms": {
-            "left": false,
-            "right": false,
-            "bottom": true,
-            "top": false
-        },
-        "specialEvent": "puzzle",
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Cuarto de recreación",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": true
-        },
-        "specialEvent": "puzzle",
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Cuarto de conservas",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": true
-        },
-        "specialEvent": "item",
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Taller",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": true
-        },
-        "specialEvent": null,
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Baño",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": true
-        },
-        "specialEvent": "item",
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Cuarto del mayordomo",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": true
-        },
-        "specialEvent": "item",
-        "statsEffects": null,
-        "movesToFloor": []
-    },
-    {
-        "name": "Elevador",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": true
-        },
-        "specialEvent": null,
-        "statsEffects": null,
-        "movesToFloor": [0, 1, 2]
-    },
-    {
+        "id": "entrance",
         "name": "Entrada",
         "adjacentRooms": {
             "left": true,
@@ -156,6 +13,163 @@
         "movesToFloor": [2]
     },
     {
+        "id": "comedor", 
+        "name": "Comedor",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "ballroom",
+        "name":"Cuarto de baile",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": false
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "cocina",
+        "name": "Cocina",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": false
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "lavado",
+        "name": "Cuarto de lavado",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "conservatorio",
+        "name": "Conservatorio",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": false,
+            "top": false
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "jardin",
+        "name": "Jardín",
+        "adjacentRooms": {
+            "left": false,
+            "right": false,
+            "bottom": true,
+            "top": false
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "game_room",
+        "name": "Cuarto de recreación",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "puzzle",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "food_storage",
+        "name": "Cuarto de conservas",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "item",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "workshop",
+        "name": "Taller",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "bathroom",
+        "name": "Baño",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "item",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "buttler",
+        "name": "Cuarto del mayordomo",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": "item",
+        "statsEffects": null,
+        "movesToFloor": []
+    },
+    {
+        "id": "elevador",
+        "name": "Elevador",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": [0, 1, 2]
+    },
+    {
+        "id": "hole_boi",
         "name": "Cuarto colapsado",
         "adjacentRooms": {
             "left": true,

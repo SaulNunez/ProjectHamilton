@@ -1,5 +1,21 @@
 [
     {
+        "id": "stairs",
+        "name": "Escaleras",
+        "adjacentRooms": {
+            "left": true,
+            "right": true,
+            "bottom": true,
+            "top": true
+        },
+        "specialEvent": null,
+        "statsEffects": null,
+        "movesToFloor": [
+            1
+        ]
+    },
+    {
+        "id": "library",
         "name": "Librería",
         "adjacentRooms": {
             "left": true,
@@ -12,6 +28,7 @@
         "movesToFloor": []
     },
     {
+        "id": "gimnasio",
         "name": "Gimnasio",
         "adjacentRooms": {
             "left": true,
@@ -24,7 +41,8 @@
         "movesToFloor": []
     },
     {
-        "name": "Oficina",
+        "id": "estudio",
+        "name": "Estudio",
         "adjacentRooms": {
             "left": true,
             "right": true,
@@ -36,6 +54,7 @@
         "movesToFloor": []
     },
     {
+        "id": "children_room",
         "name": "Cuarto de los niños",
         "adjacentRooms": {
             "left": true,
@@ -48,6 +67,7 @@
         "movesToFloor": []
     },
     {
+        "id": "room",
         "name": "Cuarto",
         "adjacentRooms": {
             "left": true,
@@ -60,6 +80,7 @@
         "movesToFloor": []
     },
     {
+        "id": "nursery",
         "name": "Enfermería",
         "adjacentRooms": {
             "left": true,
@@ -72,6 +93,7 @@
         "movesToFloor": []
     },
     {
+        "id": "guests",
         "name": "Cuarto de huespedes",
         "adjacentRooms": {
             "left": true,
@@ -84,6 +106,7 @@
         "movesToFloor": []
     },
     {
+        "id": "storage",
         "name": "Cuarto de almacenamiento",
         "adjacentRooms": {
             "left": true,
@@ -96,6 +119,7 @@
         "movesToFloor": []
     },
     {
+        "id": "hole_boi",
         "name": "Piso con agujero",
         "adjacentRooms": {
             "left": true,
@@ -105,10 +129,13 @@
         },
         "specialEvent": null,
         "statsEffects": null,
-        "movesToFloor": [1]
+        "movesToFloor": [
+            1
+        ]
     },
     {
-        "name": "Vault",
+        "id": "vault",
+        "name": "Boveda",
         "adjacentRooms": {
             "left": true,
             "right": true,
@@ -120,6 +147,7 @@
         "movesToFloor": []
     },
     {
+        "id": "terraza",
         "name": "Terraza",
         "adjacentRooms": {
             "left": false,
@@ -132,6 +160,7 @@
         "movesToFloor": []
     },
     {
+        "id": "library",
         "name": "Biblioteca",
         "adjacentRooms": {
             "left": true,
@@ -144,6 +173,7 @@
         "movesToFloor": []
     },
     {
+        "id": "descanso",
         "name": "Cuarto de descanso",
         "adjacentRooms": {
             "left": true,
@@ -156,6 +186,7 @@
         "movesToFloor": []
     },
     {
+        "id": "laboratory",
         "name": "Laboratorio",
         "adjacentRooms": {
             "left": true,
@@ -168,6 +199,7 @@
         "movesToFloor": []
     },
     {
+        "id": "game_room",
         "name": "Cuarto de juegos",
         "adjacentRooms": {
             "left": true,
@@ -180,6 +212,7 @@
         "movesToFloor": []
     },
     {
+        "id": "elevador",
         "name": "Elevador",
         "adjacentRooms": {
             "left": false,
@@ -189,18 +222,10 @@
         },
         "specialEvent": null,
         "statsEffects": null,
-        "movesToFloor": [0, 1, 2]
-    },
-    {
-        "name": "Escaleras",
-        "adjacentRooms": {
-            "left": true,
-            "right": true,
-            "bottom": true,
-            "top": true
-        },
-        "specialEvent": null,
-        "statsEffects": null,
-        "movesToFloor": [1]
+        "movesToFloor": [
+            0,
+            1,
+            2
+        ]
     }
 ]

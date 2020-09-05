@@ -1,5 +1,6 @@
 [
     {   
+        "id": "storage",
         "name": "Cuarto de almacenamiento",
         "adjacentRooms": {
             "left": true,
@@ -12,6 +13,7 @@
         "movesToFloor": []
     },
     {
+        "id": "boilers",
         "name": "Calentadores de agua",
         "adjacentRooms": {
             "left": true,
@@ -24,6 +26,7 @@
         "movesToFloor": []
     },
     {
+        "id": "elevador",
         "name": "Elevador",
         "adjacentRooms": {
             "left": true,
@@ -36,6 +39,7 @@
         "movesToFloor": []
     },
     {
+        "id": "hole_boi",
         "name": "Cuarto colapsado",
         "adjacentRooms": {
             "left": true,
@@ -53,6 +57,7 @@
         "movesToFloor": []
     },
     {
+        "id": "distilery",
         "name": "Cuarto de vinos",
         "adjacentRooms": {
             "left": true,
@@ -65,6 +70,7 @@
         "movesToFloor": []
     },
     {
+        "id": "monsters",
         "name": "Cuarto de monstruos",
         "adjacentRooms": {
             "left": true,
@@ -77,6 +83,7 @@
         "movesToFloor": []
     },
     {
+        "id": "booty",
         "name": "Cuarto de tesoro",
         "adjacentRooms": {
             "left": true,
@@ -89,6 +96,7 @@
         "movesToFloor": []
     },
     {
+        "id": "armamento",
         "name": "Cuarto de armamento",
         "adjacentRooms": {
             "left": true,
@@ -101,6 +109,7 @@
         "movesToFloor": []
     },
     {
+        "id": "lake",
         "name": "Lago subterraneo",
         "adjacentRooms": {
             "left": true,
@@ -113,6 +122,7 @@
         "movesToFloor": []
     },
     {
+        "id": "cripta",
         "name": "Cripta",
         "adjacentRooms": {
             "left": true,
@@ -125,6 +135,7 @@
         "movesToFloor": []
     },
     {
+        "id": "messy_room",
         "name": "Cuarto de tiradero",
         "adjacentRooms": {
             "left": true,
@@ -137,6 +148,7 @@
         "movesToFloor": []
     },
     {
+        "id": "bloddy_room",
         "name": "Cuarto sangriento",
         "adjacentRooms": {
             "left": true,

@@ -1,44 +1,57 @@
 import db from '../../database';
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../gamesession/constants';
 import { v4 as uuidv4 } from 'uuid';
+import { json } from 'express';
 
 function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
-    //Mejorar algoritmo, tenemos que tener en consideracion las puertas que tiene el prototipo del cuarto.
-    db.transaction((dbTransaction) => {
-        floorRooms.forEach(room => {
-            const pos = mainFloorOutline[Math.floor(Math.random() * mainFloorOutline.length)];
-            house.topFloor.set(pos, room);
+    const mainFloorOutline = [[0, 0]];
+    let rooms = [];
 
-            const [x, y] = pos;
+    floorRooms.forEach(room => {
+        const pos = mainFloorOutline[Math.floor(Math.random() * mainFloorOutline.length)];
 
-            const positions = [
-                [x + 1, y - 1],
-                [x + 1, y],
-                [x + 1, y + 1],
-                [x - 1, y - 1],
-                [x - 1, y],
-                [x - 1, y + 1],
-                [x, y - 1],
-                [x, y + 1]
-            ];
+        const x = pos[0];
+        const y = pos[1];
 
-            delete mainFloorOutline[mainFloorOutline.findIndex((val) => val === pos)];
 
-            positions.forEach(([x, y]) => {
-                if (db('rooms').where(x, y).count().first().count > 0) {
-                    mainFloorOutline.push(roomPos);
-                }
-            });
-
-            dbTransaction.insert({x, y, 
-                floor: floorToPopulate, 
-                lobby_id: lobbyCode, 
-                room_proto: room.id
-            }).into('rooms');
+        rooms.push({
+            x, y,
+            floor: floorToPopulate,
+            lobby_id: lobbyCode,
+            room_proto: room.id,
+            id: uuidv4()
         });
 
-        dbTransaction.commit();
+        let positions = [];
+
+        if (room.adjacentRooms.right) {
+            positions.push([x + 1, y]);
+        }
+
+        if (room.adjacentRooms.left) {
+            positions.push([x - 1, y]);
+        }
+
+        if (room.adjacentRooms.bottom) {
+            positions.push([x, y - 1]);
+        }
+
+        if (room.adjacentRooms.top) {
+            positions.push([x, y + 1]);
+        }
+
+        mainFloorOutline.splice(mainFloorOutline.findIndex((val) => val === pos), 1);
+
+        positions.forEach((pos) => {
+            if (mainFloorOutline.indexOf(pos) === -1
+                && rooms.findIndex((room) => room.x === pos[0] && room.y === pos[1]) === -1) {
+
+                mainFloorOutline.push(pos);
+            }
+        });
     });
+
+    db.insert(rooms).into('rooms');
 }
 
 function createRooms(lobbyCode) {
@@ -55,9 +68,7 @@ function createRooms(lobbyCode) {
 export async function createLobby() {
     try {
         let lobbyCode = Math.random().toString(36).substring(7);
-
         await db.insert({ code: lobbyCode }, ['code']).into("lobbies");
-
         createRooms(lobbyCode);
 
         return lobbyCode;
@@ -75,12 +86,14 @@ export async function joinLobby(lobbyCode) {
         if (results.length > 0) {
             const playerInfoQuery = await db('players').select('character_name', 'display_name').where({ lobby_id: lobbyCode });
 
-            const tokenInfo = await db.insert({ lobby_id: lobbyCode, 
+            const tokenInfo = await db.insert({
+                lobby_id: lobbyCode,
                 id: uuidv4(),
                 sanity: 0,
                 physical: 0,
                 intelligence: 0,
-                bravery: 0 }, 'id').into('players');
+                bravery: 0
+            }, 'id').into('players');
 
             return {
                 type: 'lobby_joined',

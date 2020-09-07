@@ -1,22 +1,89 @@
 [
     {
-        "name":"",
-        "description": "",
+        "id": "gates",
+        "name": "Cyril Gates",
+        "description": "Hija del importante hombre de negocios Andrew Gates, dueño de la compañía de textiles más grande del sur de Inglaterra. Interesada en la lectura desde pequeña pasa gran rato de su tiempo en su cuarto escribiendo novelas, de la cuales han sido publicadas dos con moderado éxito.",
         "stats": {
-            "bravery": 0,
-            "sanity": 0,
-            "intelligence": 0,
-            "physical": 0
+            "bravery": 2,
+            "sanity": 4,
+            "intelligence": 2,
+            "physical": 4
         } 
     },
     {
-        "name":"",
+        "id": "lawrence",
+        "name":"Joseph Lawrence",
+        "description": "Socio de Andrew Gates. Pasa sus tardes en su estudio haciendo trabajos en física. Es muy bueno en la caza, de niño su papá lo llevaba para que lo acompañara en las casas de campo que organizaba durante el verano y primavera.",
+        "stats": {
+            "bravery": 3,
+            "sanity": 3,
+            "intelligence": 3,
+            "physical": 3
+        }
+    },
+    {
+        "name":"Werner Lafayete",
         "description": "",
         "stats": {
             "bravery": 0,
             "sanity": 0,
             "intelligence": 0,
             "physical": 0
+        }
+    },
+    {
+        "id": "lewis",
+        "name":"Andrea Lewis",
+        "description": "Viuda, anteriormente casada con un importante terrateniente que descubrió infortunio en una cabalgata donde se cayo de su caballo. Heredo una gran cantidad de tierras, hizo de ello mas de lo que los otros miembros de la familia jamás hayan pensado. Se alió recientemente para proporcionar cebada y trigo a una importante destiladora del sur de los Estados Unidos.",
+        "stats": {
+            "bravery": 4,
+            "sanity": 2,
+            "intelligence": 4,
+            "physical": 2
+        }
+    },
+    {
+        "id": "ordonez",
+        "name":"Johana Ordoñez",
+        "description": "Hija y socia del hombre de negocio Carlos Ordoñez el dueño de uno de los ingenieros azucareros más grandes de México.",
+        "stats": {
+            "bravery": 3,
+            "sanity": 3,
+            "intelligence": 3,
+            "physical": 3
+        }
+    },
+    {
+        "id": "macarthur",
+        "name":"Johann MacArthur",
+        "description": "Cazador de tesoros. Obtuvo su fama con los descubrimientos que hizo en una excavación hace algunos años, descubrió algunos preciosos artefactos de la cultura babilónica.",
+        "stats": {
+            "bravery": 3,
+            "sanity": 2,
+            "intelligence": 2,
+            "physical": 5
+        }
+    },
+    {
+        "id": "wu",
+        "name":"John Wu",
+        "description": "Empresario chino de la ciudad de San Francisco. Propietario del hotel Sunrise, conocido en toda la costa este como uno de los lugares mas lujosos para hospedarse. Hay quienes dicen que después de una noche en un bar en compañía de varios amigos, surgió la idea de la galleta de la fortuna.",
+        "stats": {
+            "bravery": 3,
+            "sanity": 4,
+            "intelligence": 3,
+            "physical": 2
+        }
+    },
+    {
+        "id": "brown",
+        "name":"Mathew Brown",
+        "description": "Dueño de un pequeño periódico en la ciudad de Nueva York, sin embargo, uno de los periodistas más sobresalientes de la ciudad.",
+        "stats": {
+            "bravery": 2,
+            "sanity": 2,
+            "intelligence": 5,
+            "physical": 3
         }
     }
 ]

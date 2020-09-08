@@ -21,12 +21,12 @@
     "sqlite3": "^5.0.0",
     "utf-8-validate": "^5.0.2",
     "uuid": "^8.3.0",
-    "ws": "^7.3.1"
-  },
-  "devDependencies": {
+    "ws": "^7.3.1",
     "@babel/core": "^7.11.6",
     "@babel/node": "^7.10.5",
-    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-env": "^7.11.5"
+  },
+  "devDependencies": {
     "babel-jest": "^26.3.0",
     "jest": "^26.3.0",
     "mock-knex": "^0.4.9"

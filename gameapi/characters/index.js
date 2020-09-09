@@ -1,12 +1,11 @@
 import db from '../../database';
 
-const characters = require('../../gameassets/characters');
-
 export async function getAvailableCharacters(lobbyCode) {
-    const playerInfoQuery = await db('players').select('character', 'name').where({ lobby: lobbyCode });
+    const playerInfoQuery = await db('players').select('character_prototype_id', 'name').where({ lobby: lobbyCode });
+    const characters = require('../../gameassets/characters');
 
     const availableCharactersInfo = characters
-        .filter(character => !playerInfoQuery.find(x => x.name === character.name))
+        .filter(character => playerInfoQuery.indexOf(x => x.character_prototype_id === character.id) === -1)
         .map(characterData => ({
             prototypeId: "a",
             name: characterData.name,

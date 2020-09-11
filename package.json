@@ -10,6 +10,10 @@
   "author": "Saul Nunez",
   "license": "MIT",
   "dependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/node": "^7.10.5",
+    "@babel/plugin-transform-runtime": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
     "bufferutil": "^4.0.1",
     "cookie-parser": "^1.4.5",
     "esm": "^3.2.25",
@@ -21,10 +25,7 @@
     "sqlite3": "^5.0.0",
     "utf-8-validate": "^5.0.2",
     "uuid": "^8.3.0",
-    "ws": "^7.3.1",
-    "@babel/core": "^7.11.6",
-    "@babel/node": "^7.10.5",
-    "@babel/preset-env": "^7.11.5"
+    "ws": "^7.3.1"
   },
   "devDependencies": {
     "babel-jest": "^26.3.0",

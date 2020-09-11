@@ -1,7 +1,7 @@
 import db from '../../database';
 
 export async function getAvailableCharacters(lobbyCode) {
-    const playerInfoQuery = await db('players').select('character_prototype_id', 'name').where({ lobby: lobbyCode });
+    const playerInfoQuery = await db('players').select('character_prototype_id').where({ lobby_id: lobbyCode });
     const characters = require('../../gameassets/characters');
 
     const availableCharactersInfo = characters

@@ -1,11 +1,12 @@
 import db from "../../database";
+import { Room } from "../../gameassets/rooms/rooms";
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from './constants';
 
-export function startSession(lobby) {
+export function startSession(lobby: string) {
 
 }
 
-export function useItem(itemId, playerToken) {
+export function useItem(itemId: string, playerToken: string) {
     const itemDbEntry = db('items').where({ items: itemId });
     const playerEntry = db('players').where({id: playerToken});
 
@@ -16,11 +17,11 @@ export function useItem(itemId, playerToken) {
     }
 }
 
-export function moveDirection(playerToken, moveDirection){
+export function moveDirection(playerToken: string, moveDirection: string){
     const playerEntry = db('players').where({id: playerToken}).first();
     if(playerEntry.length){
-        const x = playerEntry.x;
-        const y = playerEntry.y;
+        let x = playerEntry.x;
+        let y = playerEntry.y;
 
         switch(moveDirection){
             case 'right':
@@ -52,54 +53,54 @@ export function moveDirection(playerToken, moveDirection){
             floor: playerEntry[0].floor
         }).first();
 
-        let currentRoomPrototype = null;
+        let currentRoomPrototype: Room;
         switch(playerEntry[0].floor){
             case TOP_FLOOR:
-                const topFloorList = require('../../gameassets/rooms/second_floor.json');
-                currentRoomPrototype = topFloorList.find(x => x.id === curentRoom.proto_id);
+                const topFloorList: Room[] = require('../../gameassets/rooms/second_floor.json');
+                currentRoomPrototype = topFloorList.find(x => x.id === curentRoom.proto_id)!!;
                 break;
             case MAIN_FLOOR:
-                const mainFloorList = require('../../gameassets/rooms/main_floor.json');
-                currentRoomPrototype = mainFloorList.find(x => x.id === curentRoom.proto_id);
+                const mainFloorList: Room[] = require('../../gameassets/rooms/main_floor.json');
+                currentRoomPrototype = mainFloorList.find(x => x.id === curentRoom.proto_id)!!;
                 break;
-            case BASEMENT:
-                const basementList = require('../../gameassets/rooms/basement.json');
-                currentRoomPrototype = basementList.find(x => x.id === curentRoom.proto_id);
+            default:
+                const basementList: Room[] = require('../../gameassets/rooms/basement.json');
+                currentRoomPrototype = basementList.find(x => x.id === curentRoom.proto_id)!!;
                 break;
         }
 
         if(nextRoom){
             //We might be on the edge
-            let nextRoomProtoype = null;
+            let nextRoomProtoype: Room;
 
             switch(nextRoom.floor){
                 case TOP_FLOOR:
-                    const topFloorList = require('../../gameassets/rooms/second_floor.json');
-                    nextRoomProtoype = topFloorList.find(x => x.id === nextRoom.proto_id);
+                    const topFloorList: Room[] = require('../../gameassets/rooms/second_floor.json');
+                    nextRoomProtoype = topFloorList.find(x => x.id === nextRoom.proto_id)!!;
                     break;
                 case MAIN_FLOOR:
-                    const mainFloorList = require('../../gameassets/rooms/main_floor.json');
-                    nextRoomProtoype = mainFloorList.find(x => x.id === nextRoom.proto_id);
+                    const mainFloorList: Room[] = require('../../gameassets/rooms/main_floor.json');
+                    nextRoomProtoype = mainFloorList.find(x => x.id === nextRoom.proto_id)!!;
                     break;
-                case BASEMENT:
-                    const basementList = require('../../gameassets/rooms/basement.json');
-                    nextRoomProtoype = basementList.find(x => x.id === nextRoom.proto_id);
+                default:
+                    const basementList: Room[] = require('../../gameassets/rooms/basement.json');
+                    nextRoomProtoype = basementList.find(x => x.id === nextRoom.proto_id)!!;
                     break;
             }
 
             let allowMove = false;
             switch(moveDirection){
                 case 'right':
-                    allowMove = currentRoomPrototype.doorRight && nextRoomProtoype.doorLeft;
+                    allowMove = currentRoomPrototype?.adjacentRooms.right && nextRoomProtoype?.adjacentRooms.left;
                     break;
                 case 'left':
-                    allowMove = currentRoomPrototype.doorLeft && nextRoomProtoype.doorRight;
+                    allowMove = currentRoomPrototype?.adjacentRooms.left && nextRoomProtoype?.adjacentRooms.right;
                     break;
                 case 'top':
-                    allowMove = currentRoomPrototype.doorTop && nextRoomProtoype.doorBottom;
+                    allowMove = currentRoomPrototype?.adjacentRooms.top && nextRoomProtoype?.adjacentRooms.bottom;
                     break;
                 case 'bottom':
-                    allowMove = currentRoomPrototype.doorBottom && nextRoomProtoype.doorTop;
+                    allowMove = currentRoomPrototype?.adjacentRooms.bottom && nextRoomProtoype?.adjacentRooms.top;
                     break;
                 default:
                     throw "Movement is invalid";
@@ -113,8 +114,8 @@ export function moveDirection(playerToken, moveDirection){
                 let event = null;
                 let isEndGame = false;
 
-                if('specialEvent' in nextRoomProtoype){
-                    switch(nextRoomProtoype){
+                if('specialEvent' in nextRoomProtoype!!){
+                    switch(nextRoomProtoype.specialEvent){
                         case 'item':
                             //TODO: Obtener un item
                             const itemId = db('items').insert({player_id: playerToken, prototype: ''}, ['id']);
@@ -126,8 +127,10 @@ export function moveDirection(playerToken, moveDirection){
                             //TODO: Agregar logica de puzzles
                             break;
                         case 'event':
-                            //Hacerlo pseudorandom para evitar la baja probabilidad de que acabe muy rapido
-                            isEndGame = Math.floor((Math.random() * 6) + 1) + Math.floor((Math.random() * 6) + 1);
+                            const queryPresagiosCount = db('lobbies').where({code: playerEntry[0].lobby_id}).first();
+
+                            //Hacerlo pseudorandom para evitar la probabilidad de que acabe muy rapido la partida
+                            isEndGame = Math.floor((Math.random() * 6) + 1) + Math.floor((Math.random() * 6) + 1) > queryPresagiosCount?.presagios && !(queryPresagiosCount?.presagios < 3) ;
 
                             event = {
                                 startEndGame: isEndGame,

@@ -5,8 +5,10 @@ const { Server } = require('ws');
 import { createLobby, joinLobby } from './gameapi/lobbies';
 import { selectCharacter, getAvailableCharacters } from './gameapi/characters';
 import { moveDirection } from './gameapi/gamesession';
+import { Request, Response } from 'express';
+import WebSocket, { MessageEvent } from 'ws';
 
-app.post("/create_lobby", async (request, response) => {
+app.post("/create_lobby", async (_request: Request, response: Response) => {
     const lobbyCode = await createLobby();
     if (lobbyCode) {
         response.send({ code: lobbyCode });
@@ -23,9 +25,9 @@ const server = app.listen(port, () => console.log(`Server running on port ${port
 
 const wss = new Server({ server });
 
-wss.on('connection', (ws) => {
-    ws.on('message', async (message) => {
-        const messageContents = JSON.parse(message);
+wss.on('connection', (ws: WebSocket) => {
+    ws.on('message', async (message: MessageEvent) => {
+        const messageContents = JSON.parse(message.data.toString());
         console.log(`Message received: ${message}`);
 
         const { lobbyCode } = messageContents.payload;
@@ -66,7 +68,7 @@ wss.on('connection', (ws) => {
                         type: 'player_selected_character',
                         payload: await getAvailableCharacters(lobbyCode)
                     });
-                    wss.clients.forEach((client) => {
+                    wss.clients.forEach((client: WebSocket) => {
                         if (client !== ws && client.readyState === WebSocket.OPEN) {
                             client.send(charactersUpdateInfo);
                         }
@@ -89,11 +91,11 @@ wss.on('connection', (ws) => {
                         type: 'player_moved',
                         payload: {
                             player: result.player,
-                            x: result.x, 
-                            y: result.y
+                            x: result.newXPosition, 
+                            y: result.newYPosition
                         }
                     });
-                    wss.clients.forEach((client) => {
+                    wss.clients.forEach((client: WebSocket) => {
                         if (client !== ws && client.readyState === WebSocket.OPEN) {
                             client.send(characterPositionUpdate);
                         }

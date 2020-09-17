@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "debug": "nodemon index.ts",
-    "start": "npx run tsc && node index.js"
+    "start": "npx tsc && node index.js"
   },
   "author": "Saul Nunez",
   "license": "MIT",

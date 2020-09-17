@@ -27,7 +27,7 @@ const wss = new Server({ server });
 
 wss.on('connection', (ws: WebSocket) => {
     ws.on('message', async (message: MessageEvent) => {
-        const messageContents = JSON.parse(message.data.toString());
+        const messageContents = (typeof message.data === "string")? JSON.parse(message.data): '';
         console.log(`Message received: ${message}`);
 
         const { lobbyCode } = messageContents.payload;

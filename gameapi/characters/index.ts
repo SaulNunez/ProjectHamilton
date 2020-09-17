@@ -1,11 +1,12 @@
 import db from '../../database';
+import { Character } from '../../gameassets/characters/character';
 
-export async function getAvailableCharacters(lobbyCode) {
-    const playerInfoQuery = await db('players').select('character_prototype_id').where({ lobby_id: lobbyCode });
-    const characters = require('../../gameassets/characters');
+export async function getAvailableCharacters(lobbyCode: string) {
+    const playerInfoQuery: {character_prototype_id: string}[] = await db('players').select('character_prototype_id').where({ lobby_id: lobbyCode });
+    const characters: Character[] = require('../../gameassets/characters');
 
     const availableCharactersInfo = characters
-        .filter(character => playerInfoQuery.indexOf(x => x.character_prototype_id === character.id) === -1)
+        .filter(character => playerInfoQuery.findIndex(x => x.character_prototype_id === character.id) === -1)
         .map(characterData => ({
             prototypeId: "a",
             name: characterData.name,
@@ -23,9 +24,9 @@ export async function getAvailableCharacters(lobbyCode) {
 
 }
 
-export async function selectCharacter(lobbyCode, displayName, character) {
-    const characterList = require('../../gameassets/characters/index.json');
-    const selectedCharacter = characterList.find(x => x.id === character);
+export async function selectCharacter(lobbyCode: string, displayName: string, character: string) {
+    const characterList: Character[] = require('../../gameassets/characters/index.json');
+    const selectedCharacter: Character | undefined = characterList.find(x => x.id === character);
 
     if (selectedCharacter) {
         const [playerToken] = await db.insert({
@@ -34,7 +35,7 @@ export async function selectCharacter(lobbyCode, displayName, character) {
             intelligence: selectedCharacter.stats.intelligence,
             bravery: selectedCharacter.stats.bravery,
             character_prototype_id: selectedCharacter.id,
-            characterName: selectedCharacter.character_name,
+            characterName: selectedCharacter.name,
             lobby_id: lobbyCode,
             display_name: displayName
         }, ['id']).into('players');

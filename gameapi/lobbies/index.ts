@@ -1,11 +1,11 @@
 import db from '../../database';
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../gamesession/constants';
 import { v4 as uuidv4 } from 'uuid';
-import { json } from 'express';
+import { Room } from '../../gameassets/rooms/rooms';
 
-function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
+function populateFloor(lobbyCode: string, floorRooms: Room[], floorToPopulate: number) {
     const mainFloorOutline = [[0, 0]];
-    let rooms = [];
+    let rooms: {x: number, y: number, floor: number, lobby_id: string, room_proto: string, id: string}[] = [];
 
     floorRooms.forEach(room => {
         const pos = mainFloorOutline[Math.floor(Math.random() * mainFloorOutline.length)];
@@ -54,7 +54,7 @@ function populateFloor(lobbyCode, floorRooms, floorToPopulate) {
     db.insert(rooms).into('rooms');
 }
 
-function createRooms(lobbyCode) {
+function createRooms(lobbyCode: string) {
     const mainFloorRooms = require('../../gameassets/rooms/main_floor.json');
     populateFloor(lobbyCode, mainFloorRooms, MAIN_FLOOR);
 
@@ -79,7 +79,7 @@ export async function createLobby() {
     return null;
 }
 
-export async function joinLobby(lobbyCode) {
+export async function joinLobby(lobbyCode: string) {
     try {
         const results = await db('lobbies').select('code').where({ code: lobbyCode });
 
@@ -99,7 +99,9 @@ export async function joinLobby(lobbyCode) {
                 type: 'lobby_joined',
                 payload: {
                     currentPlayers: playerInfoQuery.length,
-                    charactersUsed: playerInfoQuery.map(playerInfo => playerInfo.character_name).filter(player => player),
+                    charactersUsed: playerInfoQuery
+                                    .map((playerInfo: {character_name: string}) => playerInfo.character_name)
+                                    .filter((player: string) => player),
                     playersInLobbyInfo: playerInfoQuery,
                     token: tokenInfo.id
                 }

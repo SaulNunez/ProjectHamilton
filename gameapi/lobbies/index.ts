@@ -99,9 +99,6 @@ export async function joinLobby(lobbyCode: string) {
                 type: 'lobby_joined',
                 payload: {
                     currentPlayers: playerInfoQuery.length,
-                    charactersUsed: playerInfoQuery
-                                    .map((playerInfo: {character_name: string}) => playerInfo.character_name)
-                                    .filter((player: string) => player),
                     playersInLobbyInfo: playerInfoQuery,
                     token: tokenInfo.id
                 }

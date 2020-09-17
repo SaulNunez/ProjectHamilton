@@ -5,7 +5,7 @@ import { Room } from '../../gameassets/rooms/rooms';
 
 function populateFloor(lobbyCode: string, floorRooms: Room[], floorToPopulate: number) {
     const mainFloorOutline = [[0, 0]];
-    let rooms: {x: number, y: number, floor: number, lobby_id: string, room_proto: string, id: string}[] = [];
+    let rooms: { x: number, y: number, floor: number, lobby_id: string, room_proto: string, id: string }[] = [];
 
     floorRooms.forEach(room => {
         const pos = mainFloorOutline[Math.floor(Math.random() * mainFloorOutline.length)];
@@ -80,39 +80,27 @@ export async function createLobby() {
 }
 
 export async function joinLobby(lobbyCode: string) {
-    try {
-        const results = await db('lobbies').select('code').where({ code: lobbyCode });
+    const results = await db('lobbies').select('code').where({ code: lobbyCode });
 
-        if (results.length > 0) {
-            const playerInfoQuery = await db('players').select('character_name', 'display_name').where({ lobby_id: lobbyCode });
+    if (results.length > 0) {
+        const playerInfoQuery = await db('players').select('character_name', 'display_name').where({ lobby_id: lobbyCode });
 
-            const tokenInfo = await db.insert({
-                lobby_id: lobbyCode,
-                id: uuidv4(),
-                sanity: 0,
-                physical: 0,
-                intelligence: 0,
-                bravery: 0
-            }, 'id').into('players');
+        const tokenInfo = await db.insert({
+            lobby_id: lobbyCode,
+            id: uuidv4(),
+            sanity: 0,
+            physical: 0,
+            intelligence: 0,
+            bravery: 0
+        }, 'id').into('players');
 
-            return {
-                type: 'lobby_joined',
-                payload: {
-                    currentPlayers: playerInfoQuery.length,
-                    playersInLobbyInfo: playerInfoQuery,
-                    token: tokenInfo.id
-                }
-            };
-        }
-    } catch (error) {
         return {
-            type: 'lobby_joined',
-            error: error.message
+            currentPlayers: playerInfoQuery.length,
+            playersInLobbyInfo: playerInfoQuery,
+            token: tokenInfo.id,
+            lobbyCode
         };
     }
-
-    return {
-        type: 'lobby_joined',
-        error: 'There\'s no lobby found with that code'
-    };
+    
+    throw 'There\'s no lobby found with that code';
 }

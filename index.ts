@@ -35,7 +35,10 @@ wss.on('connection', (ws: WebSocket) => {
         switch (messageContents.type) {
             case 'enter_lobby':
                 try{
-                    ws.send(JSON.stringify(await joinLobby(lobbyCode)));
+                    ws.send(JSON.stringify({
+                        type: 'lobby_joined',
+                        payload: await joinLobby(lobbyCode)
+                    }));
                 } catch(e){
                     ws.send(JSON.stringify({
                         type: 'lobby_joined',

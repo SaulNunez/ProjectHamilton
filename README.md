@@ -145,26 +145,12 @@ Ver información de output de jugadores disponibles por detalles de API.
 ```
 
 #### Output
-```json
-{
-    "type": "item_used_by_player",
-    "payload": {
-        "characterAffectedId": "gates",
-        "stats": {
-            "sanity": 3,
-            "intelligence": 3,
-            "physical": 3,
-            "bravery": 3
-        }
-    }
-}
-```
 ##### Mensaje a todos los clientes del lobby
+###### Cambios de stats
 ```json
 {
     "type": "item_used_by_player",
     "payload": {
-        "payload": {
         "characterAffectedId": "gates",
         "stats": {
             "sanity": 3,
@@ -172,11 +158,46 @@ Ver información de output de jugadores disponibles por detalles de API.
             "physical": 3,
             "bravery": 3
         }
-    }
     }
 }
 ```
 
+###### Cambios de posición
+```json
+{
+    "type": "player_position_update",
+    "payload": {
+        "characterAffectedId": "gates",
+        "newPos": {
+            "x": 3,
+            "y": 2,
+            "floor": 0
+        }
+    }
+}
+```
+
+###### Cofre desbloqueado
+```json
+{
+    "type": "chest_unlocked",
+    "payload": {
+        "unlocked_chest_room": "foyer"
+    }
+}
+```
+
+###### Usar pila
+```json
+{
+    "type": "player_has_battery",
+    "payload": {
+        "payload": {
+            "characterAffectedId": "gates"
+        }
+    }
+}
+```
 
 ### Movimientos
 #### Input
@@ -208,3 +229,4 @@ Ver información de output de jugadores disponibles por detalles de API.
     }
 }
 ```
+

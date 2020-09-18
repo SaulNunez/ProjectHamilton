@@ -1,19 +1,77 @@
 import db from "../../database";
+import { Items } from "../../gameassets/items/items";
 import { Room } from "../../gameassets/rooms/rooms";
+import { LifeEffect } from "../types";
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from './constants';
 
 export function startSession(lobby: string) {
 
 }
 
-export function useItem(itemId: string, playerToken: string) {
-    const itemDbEntry = db('items').where({ items: itemId });
-    const playerEntry = db('players').where({id: playerToken});
+export async function useItem(itemId: string, playerToken: string, lobbyCode: string, characterAffectedId?: string): Promise<LifeEffect | undefined> {
+    const itemDbEntry = await db('items').join('players', 'items.player_id', '=', 'players.id').where({ items: itemId, id: playerToken, lobby_id: lobbyCode }).first();
 
-    if (itemDbEntry.length > 0 
-        && itemDbEntry[0].player_id === playerToken 
-        && playerEntry[0].id === playerToken) {
+    if (itemDbEntry.length > 0) {
+        const items: Items[] = require('../../gameassets/items');
+        const item = items.find(item => item.id === itemDbEntry.items.prototype);
 
+        if(item?.statsChange){
+            if(item?.affectOtherPlayer && characterAffectedId){
+                const other = await db('players').where({character_prototype_id: characterAffectedId}).first();
+                
+                const intelligence =  other.intelligence + item.statsChange.intelligence;
+                const bravery = other.bravery + item.statsChange.bravery;
+                const physical = other.physical + item.statsChange.physical;
+                const sanity = other.sanity + item.statsChange.sanity;
+
+                db('players').update({
+                    sanity,
+                    physical,
+                    intelligence,
+                    bravery,
+                    lobby_id: lobbyCode,
+                    character_prototype_id: characterAffectedId
+                });
+
+                return {
+                    characterId: characterAffectedId,
+                    newStats: {
+                        bravery,
+                        physical,
+                        intelligence,
+                        sanity
+                    }
+                };
+            }
+
+            const me = await db('players').where({id: playerToken}).first();
+
+            const intelligence = me.intelligence + item.statsChange.intelligence;
+            const bravery = me.bravery + item.statsChange.bravery;
+            const physical = me.physical + item.statsChange.physical;
+            const sanity = me.sanity + item.statsChange.sanity;
+
+            db('players').update({
+                sanity,
+                physical,
+                intelligence,
+                bravery,
+                lobby_id: lobbyCode,
+                id: playerToken
+            });
+
+            return {
+                characterId: playerToken,
+                newStats: {
+                    bravery,
+                    physical,
+                    intelligence,
+                    sanity
+                }
+            };
+        }
+
+        db('items').where({id: playerToken}).delete();
     }
 }
 

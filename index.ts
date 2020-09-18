@@ -4,7 +4,7 @@ const { Server } = require('ws');
 
 import { createLobby, joinLobby } from './gameapi/lobbies';
 import { selectCharacter, getAvailableCharacters } from './gameapi/characters';
-import { moveDirection } from './gameapi/gamesession';
+import { moveDirection, useItem } from './gameapi/gamesession';
 import { Request, Response } from 'express';
 import WebSocket, { MessageEvent } from 'ws';
 
@@ -82,7 +82,20 @@ wss.on('connection', (ws: WebSocket) => {
                 }
                 break;
             case "select_item":
-                const { itemId } = messageContents.payload;
+                const { itemId, playerToken } = messageContents.payload;
+
+                /* try{
+                    const result = await useItem(itemId, playerToken, lobbyCode);
+                    ws.send(JSON.stringify({
+                        type: 'select_item',
+                        payload: result
+                    }));
+                } catch(e){
+                    ws.send(JSON.stringify({
+                        type: 'select_item',
+                        error: e.message
+                    }));
+                } */
                 
                 break;
             case "move_direction":

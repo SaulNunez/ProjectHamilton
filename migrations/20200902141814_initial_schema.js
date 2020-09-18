@@ -27,7 +27,7 @@ exports.up = function(knex) {
   .createTable('items', table => {
       table.uuid("id").primary().notNullable();
       table.uuid("player_id").references("players.id");
-      table.integer("prototype");
+      table.string("prototype");
       table.string("name");
   })
   .createTable('rooms', table => {

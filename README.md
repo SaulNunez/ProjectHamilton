@@ -138,7 +138,8 @@ Ver información de output de jugadores disponibles por detalles de API.
     "payload": {
         "lobbyCode": "abcd",
         "playerToken": "",
-        "itemId": "battery"
+        "itemId": "battery",
+        "characterAffectedId": "gates"
     }
 }
 ```
@@ -146,7 +147,7 @@ Ver información de output de jugadores disponibles por detalles de API.
 #### Output
 ```json
 {
-    "type": "available_characters_update",
+    "type": "item_used_by_player",
     "payload": {
         "characterAffectedId": "gates",
         "stats": {
@@ -161,9 +162,17 @@ Ver información de output de jugadores disponibles por detalles de API.
 ##### Mensaje a todos los clientes del lobby
 ```json
 {
-    "type": "available_characters_update",
+    "type": "item_used_by_player",
     "payload": {
-        
+        "payload": {
+        "characterAffectedId": "gates",
+        "stats": {
+            "sanity": 3,
+            "intelligence": 3,
+            "physical": 3,
+            "bravery": 3
+        }
+    }
     }
 }
 ```

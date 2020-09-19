@@ -103,7 +103,7 @@ Como correrlo en producción:
 {
     "type": "player_selection_sucess",
     "payload": {
-        "playerSecretToken": "",
+        "playerToken": "123e4567-e89b-12d3-a456-426614174000"
     }
 }
 ```
@@ -136,8 +136,7 @@ Ver información de output de jugadores disponibles por detalles de API.
 {
     "type":"select_item",
     "payload": {
-        "lobbyCode": "abcd",
-        "playerToken": "",
+        "playerToken": "123e4567-e89b-12d3-a456-426614174000",
         "itemId": "battery",
         "characterAffectedId": "gates"
     }
@@ -149,7 +148,7 @@ Ver información de output de jugadores disponibles por detalles de API.
 ###### Cambios de stats
 ```json
 {
-    "type": "item_used_by_player",
+    "type": "stats_change",
     "payload": {
         "characterAffectedId": "gates",
         "stats": {
@@ -205,7 +204,8 @@ Ver información de output de jugadores disponibles por detalles de API.
 {
     "type":"move_direction",
     "payload": {
-        "lobbyCode": "abcd"
+        "playerToken": "123e4567-e89b-12d3-a456-426614174000",
+        "direction": "right"
     }
 }
 ```
@@ -213,19 +213,14 @@ Ver información de output de jugadores disponibles por detalles de API.
 #### Output
 ```json
 {
-    "type": "player_moved",
+    "type": "player_position_update",
     "payload": {
-       
-    }
-}
-```
-
-##### Mensaje a todos los clientes del lobby
-```json
-{
-    "type": "player_moved",
-    "payload": {
-        
+        "characterAffectedId": "gates",
+        "newPos": {
+            "x": 3,
+            "y": 2,
+            "floor": 0
+        }
     }
 }
 ```

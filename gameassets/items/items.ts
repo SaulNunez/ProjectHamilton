@@ -6,5 +6,6 @@ export type Items = {
     needsThrow: boolean,
     affectOtherPlayer: true,
     statsChange: Stats,
-    singleUse: boolean
+    singleUse: boolean,
+    moves?: boolean
 };

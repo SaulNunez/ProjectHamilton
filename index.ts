@@ -7,6 +7,7 @@ import { selectCharacter, getAvailableCharacters } from './gameapi/characters';
 import { moveDirection, useItem } from './gameapi/gamesession';
 import { Request, Response } from 'express';
 import WebSocket, { MessageEvent } from 'ws';
+import { isCharacterMovement, isLifeEffect } from './gameapi/types';
 
 app.post("/create_lobby", async (_request: Request, response: Response) => {
     const lobbyCode = await createLobby();
@@ -84,8 +85,8 @@ wss.on('connection', (ws: WebSocket) => {
             case "select_item":
                 const { itemId, playerToken } = messageContents.payload;
 
-                /* try{
-                    const result = await useItem(itemId, playerToken, lobbyCode);
+                try{
+                    const result = await useItem(itemId, playerToken, lobbyCode, messageContents.payload);
                     ws.send(JSON.stringify({
                         type: 'select_item',
                         payload: result
@@ -95,7 +96,7 @@ wss.on('connection', (ws: WebSocket) => {
                         type: 'select_item',
                         error: e.message
                     }));
-                } */
+                }
                 
                 break;
             case "move_direction":
@@ -103,19 +104,25 @@ wss.on('connection', (ws: WebSocket) => {
                     const {direction, playerToken} = messageContents.payload;
                     const result = moveDirection(playerToken, direction);
 
-                    const characterPositionUpdate = JSON.stringify({
-                        type: 'player_moved',
-                        payload: {
-                            player: result.player,
-                            x: result.newXPosition, 
-                            y: result.newYPosition
-                        }
-                    });
-                    wss.clients.forEach((client: WebSocket) => {
-                        if (client !== ws && client.readyState === WebSocket.OPEN) {
-                            client.send(characterPositionUpdate);
-                        }
-                    });
+                    let eventType = "";
+                    if(isCharacterMovement(result) ){
+                        eventType = "player_position_update";
+                    } else if(isLifeEffect(result)){
+                        eventType = "stats_change";
+                    } else {
+                        eventType = "player_has_battery";
+                    }
+
+                    if(eventType){
+                        const characterPositionUpdate = JSON.stringify({
+                            type: 'player_moved',
+                        });
+                        wss.clients.forEach((client: WebSocket) => {
+                            if (client.readyState === WebSocket.OPEN) {
+                                client.send(characterPositionUpdate);
+                            }
+                        });
+                    }
                 } catch(e){
                     ws.send(JSON.stringify({
                         type: 'player_moved',

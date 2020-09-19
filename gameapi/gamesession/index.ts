@@ -1,23 +1,52 @@
+import { type } from "os";
 import db from "../../database";
 import { Items } from "../../gameassets/items/items";
 import { Room } from "../../gameassets/rooms/rooms";
-import { LifeEffect } from "../types";
+import { CharacterMovement, LanternEffect, LifeEffect, MovementInfo } from "../types";
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from './constants';
 
 export function startSession(lobby: string) {
 
 }
 
-export async function useItem(itemId: string, playerToken: string, lobbyCode: string, characterAffectedId?: string): Promise<LifeEffect | undefined> {
+export enum Direction {
+    Top = "top",
+    Down = "down",
+    Left = "left",
+    Right = "right"
+}
+
+export type ItemUseOptions = {
+    characterAffectedId?: string,
+    moveTo?: Direction
+}
+
+export async function useItem(itemId: string, playerToken: string, lobbyCode: string, options: ItemUseOptions): Promise<LifeEffect | LanternEffect | CharacterMovement | undefined> {
+    if(db('players').where({id: playerToken}).count() == 0){
+        //On postgres count returns a string if value grater than the max for number
+        throw 'Unauthorized action, playerToken not valid';
+    }
+
     const itemDbEntry = await db('items').join('players', 'items.player_id', '=', 'players.id').where({ items: itemId, id: playerToken, lobby_id: lobbyCode }).first();
 
     if (itemDbEntry.length > 0) {
         const items: Items[] = require('../../gameassets/items');
         const item = items.find(item => item.id === itemDbEntry.items.prototype);
 
+        if(item?.id === 'lantern'){
+            //TODO: Make sure player doesn't have a battery yet
+            return {
+                characterId: options.characterAffectedId || db('players').where({id: playerToken}).select('character_prototype_id').first()!!.character_prototype_id
+            }
+        }
+
+        if(item?.moves && options?.moveTo){
+            return moveDirection(playerToken, options.moveTo);
+        }
+
         if(item?.statsChange){
-            if(item?.affectOtherPlayer && characterAffectedId){
-                const other = await db('players').where({character_prototype_id: characterAffectedId}).first();
+            if(item?.affectOtherPlayer && options.characterAffectedId){
+                const other = await db('players').where({character_prototype_id: options.characterAffectedId}).first();
                 
                 const intelligence =  other.intelligence + item.statsChange.intelligence;
                 const bravery = other.bravery + item.statsChange.bravery;
@@ -30,11 +59,11 @@ export async function useItem(itemId: string, playerToken: string, lobbyCode: st
                     intelligence,
                     bravery,
                     lobby_id: lobbyCode,
-                    character_prototype_id: characterAffectedId
+                    character_prototype_id: options.characterAffectedId
                 });
 
                 return {
-                    characterId: characterAffectedId,
+                    characterId: options.characterAffectedId,
                     newStats: {
                         bravery,
                         physical,
@@ -75,7 +104,7 @@ export async function useItem(itemId: string, playerToken: string, lobbyCode: st
     }
 }
 
-export function moveDirection(playerToken: string, moveDirection: string){
+export function moveDirection(playerToken: string, moveDirection: string): CharacterMovement{
     const playerEntry = db('players').where({id: playerToken}).first();
     if(playerEntry.length){
         let x = playerEntry.x;
@@ -166,45 +195,31 @@ export function moveDirection(playerToken: string, moveDirection: string){
 
             if(allowMove){
                 db('players').where({id: playerToken}).update({x, y});
-
-                let item = null;
-                let puzzle = null;
-                let event = null;
-                let isEndGame = false;
+                /*
+                let item = false;
+                let puzzle = false;
+                let event = false;
 
                 if('specialEvent' in nextRoomProtoype!!){
                     switch(nextRoomProtoype.specialEvent){
                         case 'item':
-                            //TODO: Obtener un item
-                            const itemId = db('items').insert({player_id: playerToken, prototype: ''}, ['id']);
-                            item = {
-                                id: itemId
-                            };
+                            item = true;
                             break;
                         case 'puzzle':
-                            //TODO: Agregar logica de puzzles
+                            puzzle = true;
                             break;
                         case 'event':
-                            const queryPresagiosCount = db('lobbies').where({code: playerEntry[0].lobby_id}).first();
-
-                            //Hacerlo pseudorandom para evitar la probabilidad de que acabe muy rapido la partida
-                            isEndGame = Math.floor((Math.random() * 6) + 1) + Math.floor((Math.random() * 6) + 1) > queryPresagiosCount?.presagios && !(queryPresagiosCount?.presagios < 3) ;
-
-                            event = {
-                                startEndGame: isEndGame,
-
-                            };
+                            event = true;
                             break;
                     }
                 }
+                */
 
                 return {
-                    player: playerEntry.public_token,
-                    newXPosition: x,
-                    newYPosition: y,
-                    item,
-                    puzzle,
-                    event
+                    characterAffectedId: playerToken,
+                    newPos: {
+                        x, y, floor: 0
+                    }
                 }
             } else {
                 throw "Movement not allowed";

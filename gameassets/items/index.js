@@ -1,5 +1,6 @@
 export const Items = [
     {
+        id: 'pewpew',
         name: "Pistola",
         needsThrow: true,
         affectsOtherPlayer: true, 
@@ -12,11 +13,13 @@ export const Items = [
         singleUse: true
     },
     {
+        id: 'magic_stone',
         name: "Piedra con poderes mágicos",
         singleUse: true,
         needsThrow: true
     },
     {
+        id: 'totem',
         name: "Totém pequeño",
         statsChange: {
             sanity: -1,
@@ -26,6 +29,7 @@ export const Items = [
         }
     },
     {
+        id: 'daga',
         name: "Daga sacrificial",
         needsThrow: true,
         customThrow: {
@@ -39,15 +43,17 @@ export const Items = [
         }
     },
     {
+        id: 'key',
         name: "Llave del mayordomo",
         useAs: 'key',
         singleUse: true
     },
     {
         name: "Cuerda",
-        useAs: 'ladder'
+        moves: true
     },
     {
+        id: 'adrenaline',
         name: "Injección de adrenalina",
         singleUse: true,
         statsChange: {

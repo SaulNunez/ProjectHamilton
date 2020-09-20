@@ -6,6 +6,10 @@ describe('Test player movement', () => {
     const testToken = '1234';
     const testMovement = 'right';
 
+    beforeEach(() => {
+
+    });
+
     expect(moveDirection(testToken, testMovement)).toThrow('Player not found');
   });
 

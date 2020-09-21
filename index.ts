@@ -102,7 +102,7 @@ wss.on('connection', (ws: WebSocket) => {
             case "move_direction":
                 try{
                     const {direction, playerToken} = messageContents.payload;
-                    const result = moveDirection(playerToken, direction);
+                    const result = await moveDirection(playerToken, direction);
 
                     let eventType = "";
                     if(isCharacterMovement(result) ){

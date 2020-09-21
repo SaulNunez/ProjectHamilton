@@ -27,3 +27,14 @@ export function isCharacterMovement(gameplayInfo: CharacterMovement | MovementIn
 export function isLifeEffect(gameplayInfo: CharacterMovement | LifeEffect | LanternEffect): gameplayInfo is LifeEffect{
     return (gameplayInfo as LifeEffect).newStats !== undefined;
 }
+
+export interface DbPlayer {
+    x: number, 
+    y: number,
+    lobby_id: string,
+    floor: number
+}
+
+export interface DbRoom {
+    proto_id: string
+}

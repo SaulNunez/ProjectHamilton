@@ -2,7 +2,7 @@ import { type } from "os";
 import db from "../../database";
 import { Items } from "../../gameassets/items/items";
 import { Room } from "../../gameassets/rooms/rooms";
-import { CharacterMovement, LanternEffect, LifeEffect, MovementInfo } from "../types";
+import { CharacterMovement, LanternEffect, LifeEffect, MovementInfo, DbPlayer, DbRoom } from "../types";
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from './constants';
 
 export function startSession(lobby: string) {
@@ -22,7 +22,7 @@ export type ItemUseOptions = {
 }
 
 export async function useItem(itemId: string, playerToken: string, lobbyCode: string, options: ItemUseOptions): Promise<LifeEffect | LanternEffect | CharacterMovement | undefined> {
-    if(db('players').where({id: playerToken}).count() == 0){
+    if(!db('players').where({id: playerToken}).count('id')){
         //On postgres count returns a string if value grater than the max for number
         throw 'Unauthorized action, playerToken not valid';
     }
@@ -36,7 +36,7 @@ export async function useItem(itemId: string, playerToken: string, lobbyCode: st
         if(item?.id === 'lantern'){
             //TODO: Make sure player doesn't have a battery yet
             return {
-                characterId: options.characterAffectedId || db('players').where({id: playerToken}).select('character_prototype_id').first()!!.character_prototype_id
+                characterId: options.characterAffectedId || (await db('players').where({ id: playerToken }).select('character_prototype_id').first<{ character_prototype_id: string; }>()!!).character_prototype_id
             }
         }
 
@@ -104,9 +104,9 @@ export async function useItem(itemId: string, playerToken: string, lobbyCode: st
     }
 }
 
-export function moveDirection(playerToken: string, moveDirection: string): CharacterMovement{
-    const playerEntry = db('players').where({id: playerToken}).first();
-    if(playerEntry.length){
+export async function moveDirection(playerToken: string, moveDirection: string): Promise<CharacterMovement>{
+    const playerEntry = await db('players').where({id: playerToken}).first<DbPlayer>();
+    if(playerEntry){
         let x = playerEntry.x;
         let y = playerEntry.y;
 
@@ -127,21 +127,21 @@ export function moveDirection(playerToken: string, moveDirection: string): Chara
                 throw "Movement is invalid";
         }
 
-        const nextRoom = db('rooms').where({
-            lobby_id: playerEntry[0].lobby_id, 
+        const nextRoom = await db('rooms').where({
+            lobby_id: playerEntry.lobby_id, 
             x, y, 
-            floor: playerEntry[0].floor
+            floor: playerEntry.floor
         }).first();
 
-        const curentRoom = db('rooms').where({
-            lobby_id: playerEntry[0].lobby_id, 
-            x: playerEntry[0].x, 
-            y: playerEntry[0].y, 
-            floor: playerEntry[0].floor
-        }).first();
+        const curentRoom = await db('rooms').where({
+            lobby_id: playerEntry.lobby_id, 
+            x: playerEntry.x, 
+            y: playerEntry.y, 
+            floor: playerEntry.floor
+        }).first<DbRoom>();
 
         let currentRoomPrototype: Room;
-        switch(playerEntry[0].floor){
+        switch(playerEntry.floor){
             case TOP_FLOOR:
                 const topFloorList: Room[] = require('../../gameassets/rooms/second_floor.json');
                 currentRoomPrototype = topFloorList.find(x => x.id === curentRoom.proto_id)!!;
@@ -194,7 +194,7 @@ export function moveDirection(playerToken: string, moveDirection: string): Chara
             }
 
             if(allowMove){
-                db('players').where({id: playerToken}).update({x, y});
+                await db('players').where({id: playerToken}).update({x, y});
                 /*
                 let item = false;
                 let puzzle = false;

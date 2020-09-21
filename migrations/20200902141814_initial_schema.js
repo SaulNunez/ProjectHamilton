@@ -42,5 +42,9 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-  
+  return knex.schema
+    .dropTable('items')
+    .dropTable('rooms')
+    .dropTable('players')
+    .dropTable('lobbies');
 };

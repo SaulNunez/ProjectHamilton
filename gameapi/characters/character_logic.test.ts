@@ -1,17 +1,14 @@
 import {getAvailableCharacters} from './index';
 import db from '../../database';
 
-async function initializeLobby(){
-    try {
-        await db('lobbies').where({ code: '1234' }).delete();
-        await db.insert({ code: '1234' }).into("lobbies");
-    } catch(e){
-    }
-}
-
-beforeAll(() => {
-    return initializeLobby();
+beforeAll(async () => {
+    db.migrate.latest();
+    await db.insert({ code: '1234' }).into("lobbies");
   });
+
+afterAll(async () => {
+    await db('lobbies').where({ code: '1234' }).delete();
+});
 
 describe('Probar personajes disponibles', () => {
     test('Informacion de personajes disponibles tiene las entradas necesarias',async () => {

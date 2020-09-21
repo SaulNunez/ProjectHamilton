@@ -1,106 +1,186 @@
-import db from '../../database';
-import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../gamesession/constants';
-import { v4 as uuidv4 } from 'uuid';
-import { Room } from '../../gameassets/rooms/rooms';
+import * as WebSocket from 'ws';
+import * as http from 'http';
+import * as net from 'net';
+import { joinLobby } from './handling';
+import { getAvailableCharacters, selectCharacter } from '../characters';
+import { moveDirection, useItem } from '../gamesession';
+import { isCharacterMovement, isLifeEffect } from '../types';
 
-function populateFloor(lobbyCode: string, floorRooms: Room[], floorToPopulate: number) {
-    const mainFloorOutline = [[0, 0]];
-    let rooms: { x: number, y: number, floor: number, lobby_id: string, room_proto: string, id: string }[] = [];
+const url = require('url');
 
-    floorRooms.forEach(room => {
-        const pos = mainFloorOutline[Math.floor(Math.random() * mainFloorOutline.length)];
+class WebsocketLobby {
+    private ws: WebSocket.Server;
+    constructor() {
+        this.ws = new WebSocket.Server({ noServer: true });
 
-        const x = pos[0];
-        const y = pos[1];
+        this.ws.on('connection', (ws: WebSocket) => {
+            ws.on('message', async (message: MessageEvent) => {
+                const messageContents = JSON.parse(message.toString());
+                console.log(`Message received: ${message}`);
 
+                const { lobbyCode } = messageContents.payload;
 
-        rooms.push({
-            x, y,
-            floor: floorToPopulate,
-            lobby_id: lobbyCode,
-            room_proto: room.id,
-            id: uuidv4()
+                switch (messageContents.type) {
+                    case 'enter_lobby':
+                        try {
+                            ws.send(JSON.stringify({
+                                type: 'lobby_joined',
+                                payload: await joinLobby(lobbyCode)
+                            }));
+                        } catch (e) {
+                            ws.send(JSON.stringify({
+                                type: 'lobby_joined',
+                                error: e.message
+                            }));
+                        }
+                        break;
+                    case "get_available_characters":
+                        try {
+                            ws.send(JSON.stringify({
+                                type: 'available_characters_update',
+                                payload: await getAvailableCharacters(lobbyCode)
+                            }));
+                        } catch (error) {
+                            ws.send(JSON.stringify({
+                                type: 'available_characters_update',
+                                error: error.message
+                            }));
+                        }
+                        break;
+                    case "select_character":
+                        try {
+                            const { displayName, character, lobbyCode } = messageContents.payload;
+
+                            const characterSelected = await selectCharacter(lobbyCode, displayName, character);
+                            ws.send(JSON.stringify({
+                                type: 'player_selection_sucess', payload: characterSelected
+                            }));
+
+                            const charactersUpdateInfo = JSON.stringify({
+                                type: 'player_selected_character',
+                                payload: await getAvailableCharacters(lobbyCode)
+                            });
+                            this.ws.clients.forEach((client) => {
+                                if (client !== ws && client.readyState === WebSocket.OPEN) {
+                                    client.send(charactersUpdateInfo);
+                                }
+                            });
+                        } catch (error) {
+                            ws.send(JSON.stringify({
+                                type: 'player_selection_sucess', error: error.message
+                            }));
+                        }
+                        break;
+                    case "select_item":
+                        const { itemId, playerToken } = messageContents.payload;
+
+                        try {
+                            const result = await useItem(itemId, playerToken, lobbyCode, messageContents.payload);
+                            ws.send(JSON.stringify({
+                                type: 'select_item',
+                                payload: result
+                            }));
+                        } catch (e) {
+                            ws.send(JSON.stringify({
+                                type: 'select_item',
+                                error: e.message
+                            }));
+                        }
+
+                        break;
+                    case "move_direction":
+                        try {
+                            const { direction, playerToken } = messageContents.payload;
+                            const result = await moveDirection(playerToken, direction);
+
+                            let eventType = "";
+                            if (isCharacterMovement(result)) {
+                                eventType = "player_position_update";
+                            } else if (isLifeEffect(result)) {
+                                eventType = "stats_change";
+                            } else {
+                                eventType = "player_has_battery";
+                            }
+
+                            if (eventType) {
+                                const characterPositionUpdate = JSON.stringify({
+                                    type: 'player_moved',
+                                });
+                                this.ws.clients.forEach((client) => {
+                                    if (client.readyState === WebSocket.OPEN) {
+                                        client.send(characterPositionUpdate);
+                                    }
+                                });
+                            }
+                        } catch (e) {
+                            ws.send(JSON.stringify({
+                                type: 'player_moved',
+                                error: e.message
+                            }));
+                        }
+                        break;
+                    case "puzzle_solved":
+                        break;
+                }
+            });
         });
+    }
 
-        let positions = [];
-
-        if (room.adjacentRooms.right) {
-            positions.push([x + 1, y]);
-        }
-
-        if (room.adjacentRooms.left) {
-            positions.push([x - 1, y]);
-        }
-
-        if (room.adjacentRooms.bottom) {
-            positions.push([x, y - 1]);
-        }
-
-        if (room.adjacentRooms.top) {
-            positions.push([x, y + 1]);
-        }
-
-        mainFloorOutline.splice(mainFloorOutline.findIndex((val) => val === pos), 1);
-
-        positions.forEach((pos) => {
-            if (mainFloorOutline.indexOf(pos) === -1
-                && rooms.findIndex((room) => room.x === pos[0] && room.y === pos[1]) === -1) {
-
-                mainFloorOutline.push(pos);
-            }
+    requestUpgrade(request: http.IncomingMessage, socket: net.Socket,
+        upgradeHead: Buffer) {
+        this.ws.handleUpgrade(request, socket, upgradeHead, (ws) => {
+            this.ws.emit('connection', ws, request);
         });
-    });
-
-    db.insert(rooms).into('rooms');
+    }
 }
 
-function createRooms(lobbyCode: string) {
-    const mainFloorRooms = require('../../gameassets/rooms/main_floor.json');
-    populateFloor(lobbyCode, mainFloorRooms, MAIN_FLOOR);
+const FIVE_MINUTES = 5 * 60 * 1000;
+class WebsocketHandling {
+    private lobbies: { [key: string]: WebsocketLobby } = {};
 
-    const topFloorRooms = require('../../gameassets/rooms/second_floor.json');
-    populateFloor(lobbyCode, topFloorRooms, TOP_FLOOR);
+    private static _instance: WebsocketHandling = new WebsocketHandling();
 
-    const basementRooms = require('../../gameassets/rooms/basement.json');
-    populateFloor(lobbyCode, basementRooms, BASEMENT);
+    constructor() {
+        if (WebsocketHandling._instance) {
+            throw new Error("WebsocketHandling is a singleton not a instance");
+        }
+
+        WebsocketHandling._instance = this;
+    }
+
+
+    public static getInstance() {
+        return WebsocketHandling._instance;
+    }
+
+    createLobby(lobbyCode: string) {
+        this.lobbies[lobbyCode] = new WebsocketLobby();
+    }
+
+    connectToLobby(lobbyCode: string, request: http.IncomingMessage, socket: net.Socket,
+        upgradeHead: Buffer) {
+        if (this.lobbies.hasOwnProperty(lobbyCode)) {
+            this.lobbies[lobbyCode].requestUpgrade(request, socket, upgradeHead);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    broadcastMessageToLobby(lobbyCode: string, message: string) {
+
+    }
 }
 
-export async function createLobby() {
+export function lobbyHandling(request: http.IncomingMessage, socket: net.Socket, upgradeHead: Buffer) {
+    const pathname: string = url.parse(request.url).pathname;
+    const lobbyCode = pathname.substring(1);
     try {
-        let lobbyCode = Math.random().toString(36).substring(7);
-        await db.insert({ code: lobbyCode }, ['code']).into("lobbies");
-        createRooms(lobbyCode);
-
-        return lobbyCode;
+        if (!WebsocketHandling.getInstance().connectToLobby(lobbyCode, request, socket, upgradeHead)) {
+            socket.destroy();
+        }
     } catch (e) {
-        console.error(e);
+        socket.destroy();
     }
-
-    return null;
-}
-
-export async function joinLobby(lobbyCode: string) {
-    const results = await db('lobbies').select('code').where({ code: lobbyCode });
-
-    if (results.length > 0) {
-        const playerInfoQuery = await db('players').select('character_name', 'display_name').where({ lobby_id: lobbyCode });
-
-        const tokenInfo = await db('players').insert({
-            lobby_id: lobbyCode,
-            id: uuidv4(),
-            sanity: 0,
-            physical: 0,
-            intelligence: 0,
-            bravery: 0
-        }, 'id');
-
-        return {
-            currentPlayers: playerInfoQuery.length,
-            playersInLobbyInfo: playerInfoQuery,
-            token: tokenInfo[0].id,
-            lobbyCode
-        };
-    }
-    
-    throw 'There\'s no lobby found with that code';
 }

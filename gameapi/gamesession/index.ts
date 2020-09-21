@@ -5,10 +5,6 @@ import { Room } from "../../gameassets/rooms/rooms";
 import { CharacterMovement, LanternEffect, LifeEffect, MovementInfo, DbPlayer, DbRoom } from "../types";
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from './constants';
 
-export function startSession(lobby: string) {
-
-}
-
 export enum Direction {
     Top = "top",
     Down = "down",

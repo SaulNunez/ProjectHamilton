@@ -11,7 +11,39 @@ Como correrlo en producción:
 5. `npx knex migrate:latest`
 6. `npm start`
 
-## API
+
+## Rutas
+### `/create_lobby`
+Crea un nuevo lobby.
+
+#### Salida
+```json
+{ 
+    "code": "sa7yu" 
+}
+```
+
+### `/start_game`
+Iniciar partida del lobby code dado.
+
+#### Petición
+```json
+{
+    "lobbyCode": "sa7yu"
+}
+```
+
+#### Respuesta
+* Retorna código 200 si pudo mandar el inicio de sesión.   
+* Retorna código 400 si no se cumplen las condiciones necesarias.
+
+Condición | Error
+--- | ---
+No hay suficientes jugadores (solo uno) | `low_player_count`
+No se ha encontrado el lobby | `lobby_no_found`
+
+
+## Websockets
 ### Entrar a lobby
 #### Input
 ```json

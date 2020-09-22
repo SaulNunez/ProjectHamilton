@@ -55,13 +55,13 @@ function populateFloor(lobbyCode: string, floorRooms: Room[], floorToPopulate: n
 }
 
 function createRooms(lobbyCode: string) {
-    const mainFloorRooms = require('../../gameassets/rooms/main_floor.json');
+    const mainFloorRooms = require('../../../gameassets/rooms/main_floor.json');
     populateFloor(lobbyCode, mainFloorRooms, MAIN_FLOOR);
 
-    const topFloorRooms = require('../../gameassets/rooms/second_floor.json');
+    const topFloorRooms = require('../../../gameassets/rooms/second_floor.json');
     populateFloor(lobbyCode, topFloorRooms, TOP_FLOOR);
 
-    const basementRooms = require('../../gameassets/rooms/basement.json');
+    const basementRooms = require('../../../gameassets/rooms/basement.json');
     populateFloor(lobbyCode, basementRooms, BASEMENT);
 }
 

@@ -34,14 +34,10 @@ Iniciar partida del lobby code dado.
 ```
 
 #### Respuesta
-* Retorna código 200 si pudo mandar el inicio de sesión.   
-* Retorna código 400 si no se cumplen las condiciones necesarias.
-
-Condición | Error
---- | ---
-No hay suficientes jugadores (solo uno) | `low_player_count`
-No se ha encontrado el lobby | `lobby_no_found`
-
+* Retorna código `200` si pudo mandar el inicio de sesión.   
+* Retorna código `400` si lobby no se especifica.
+* Retorna código `404` si lobby no se encuentra entre la lista de lobbies.
+* Retorna código `403` si no hay suficientes jugadores, o si ya ha iniciado la partida.
 
 ## Websockets
 ### Entrar a lobby

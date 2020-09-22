@@ -132,10 +132,14 @@ class WebsocketLobby {
             this.ws.emit('connection', ws, request);
         });
     }
+
+    broascast(message: string){
+        this.ws.clients.forEach(client => client.send(message));
+    }
 }
 
 const FIVE_MINUTES = 5 * 60 * 1000;
-class WebsocketHandling {
+export class WebsocketHandling {
     private lobbies: { [key: string]: WebsocketLobby } = {};
 
     private static _instance: WebsocketHandling = new WebsocketHandling();
@@ -169,7 +173,9 @@ class WebsocketHandling {
     }
 
     broadcastMessageToLobby(lobbyCode: string, message: string) {
-
+        if(this.lobbies.hasOwnProperty(lobbyCode)){
+            this.lobbies[lobbyCode].broascast(message);
+        }
     }
 }
 

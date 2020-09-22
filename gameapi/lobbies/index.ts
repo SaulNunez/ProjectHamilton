@@ -193,5 +193,7 @@ export function lobbyHandling(request: Request, socket: net.Socket, upgradeHead:
         } catch (e) {
             socket.destroy();
         }
+    } else {
+        socket.destroy();
     }
 }

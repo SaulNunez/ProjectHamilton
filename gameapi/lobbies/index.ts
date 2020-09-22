@@ -5,6 +5,7 @@ import { joinLobby } from './handling';
 import { getAvailableCharacters, selectCharacter } from '../characters';
 import { moveDirection, useItem } from '../gamesession';
 import { isCharacterMovement, isLifeEffect } from '../types';
+import { request, Request, Response } from 'express';
 
 const url = require('url');
 
@@ -179,14 +180,18 @@ export class WebsocketHandling {
     }
 }
 
-export function lobbyHandling(request: http.IncomingMessage, socket: net.Socket, upgradeHead: Buffer) {
+export function lobbyHandling(request: Request, socket: net.Socket, upgradeHead: Buffer) {
     const pathname: string = url.parse(request.url).pathname;
-    const lobbyCode = pathname.substring(1);
-    try {
-        if (!WebsocketHandling.getInstance().connectToLobby(lobbyCode, request, socket, upgradeHead)) {
+    const lobbyCode = request.params['lobbyCode'];
+
+    // Código de lobby va en la sig. parte del path `/gameapi/abcd` 
+    if(pathname.indexOf('/gameapi') !== -1){
+        try {
+            if (!WebsocketHandling.getInstance().connectToLobby(lobbyCode, request, socket, upgradeHead)) {
+                socket.destroy();
+            }
+        } catch (e) {
             socket.destroy();
         }
-    } catch (e) {
-        socket.destroy();
     }
 }

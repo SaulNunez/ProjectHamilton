@@ -253,3 +253,34 @@ Ver información de output de jugadores disponibles por detalles de API.
 }
 ```
 
+### Puzzles
+#### Evento de puzzle mandado por el servidor
+```json
+{
+    "type": "puzzle_event",
+    "payload": {
+        "puzzleId": "1",
+        "instructions": "Imprimir del 1 al 10 en la pantalla",
+        "documentation": "...",
+        "initialWorkspace": "..."
+    } 
+}
+```
+
+* `puzzleId`: Código identificador del puzzle.
+* `instructions`: Un pequeño texto explicando que tiene que hacer el jugador.
+* `documentation`: Si tiene dudas, el jugador puede acudir a esto para ver como resolver sus dudas. Tiene HTML.
+* `initialWorkspace`: XML de workspace de Blockly a mostrar cuando se abrá el workspace.
+
+#### Respuesta del jugador a mandar al servidor
+```json
+{
+    "type": "puzzle_response",
+    "payload": {
+        "code": "...",
+        "puzzleId": "1"
+    }
+}
+```
+* `code`: Código Javascript generado.
+* `puzzleId`: Código identificador del puzzle.

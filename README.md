@@ -278,7 +278,8 @@ Ver información de output de jugadores disponibles por detalles de API.
     "type": "puzzle_response",
     "payload": {
         "code": "...",
-        "puzzleId": "1"
+        "puzzleId": "1",
+        "playerToken": "123e4567-e89b-12d3-a456-426614174000"
     }
 }
 ```

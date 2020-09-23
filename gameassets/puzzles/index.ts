@@ -1,12 +1,5 @@
 import { Puzzle } from "../../types";
 
-export enum Analize {
-    No = 'no_analyze',
-    Conditional = 'conditionals',
-    Cycles = 'cycles',
-    Functions = 'functions'
-}
-
 export enum PuzzleType {
     Variables = 'variables',
     Conditionals = 'conditionals',
@@ -22,7 +15,6 @@ const puzzle : Puzzle[] = [
         documentation: '',
         instructions: "",
         expectedOutput: "",
-        analyzeSyntax: Analize.No
     },
 ];
 

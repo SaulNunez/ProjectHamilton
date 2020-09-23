@@ -1,4 +1,10 @@
-import { Analize, PuzzleType } from "./gameassets/puzzles";
+import { PuzzleType } from "./gameassets/puzzles";
+
+export type PuzzleFunctionCheck = {
+    name: string,
+    parameters: any[],
+    output: string
+};
 
 export type Puzzle = {
     id: string,
@@ -7,7 +13,8 @@ export type Puzzle = {
     instructions: string,
     documentation: string,
     expectedOutput: string,
-    analyzeSyntax: Analize
+    functionChecks?: PuzzleFunctionCheck[],
+    functionsExpected?: string[]
 }
 
 export type PuzzleDb = {
@@ -16,4 +23,18 @@ export type PuzzleDb = {
     puzzle_done: Date,
     puzzle_id: string,
     id: string
+}
+
+export type PuzzleCheckResultMicroservice = {
+    runOutput: string[],
+    matchesOutput: boolean,
+    passedCheck: boolean,
+    hasFunctions: boolean,
+    passedFunctionChecks: boolean
+}
+
+export type PuzzleCheckResult = {
+    correct: boolean,
+    output: string,
+    errors?: string
 }

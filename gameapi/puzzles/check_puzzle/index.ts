@@ -40,7 +40,7 @@ export async function puzzleIsCorrect(code: string, puzzleId: string): Promise<P
 
         return {
             correct: matchesOutput && passedCheck && hasFunctions && passedFunctionChecks,
-            output: runOutput.join('\n');
+            output: runOutput.join('\n')
         }
     } catch(e){
         throw e;

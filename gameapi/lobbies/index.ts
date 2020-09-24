@@ -169,11 +169,10 @@ export class WebsocketHandling {
                 this.createLobby(lobbyCode);
             }
             this.lobbies[lobbyCode].requestUpgrade(request, socket, upgradeHead);
-
             return true;
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     broadcastMessageToLobby(lobbyCode: string, message: string) {
@@ -189,8 +188,11 @@ export async function lobbyHandling(request: Request, socket: net.Socket, upgrad
     const pathName = path!![0] || "";
     const lobbyCode = path!![1] || "";
 
+    console.debug(`Client looking to connect, lobby code: ${lobbyCode}`);
+
     // Código de lobby va en la sig. parte del path `/gameapi/abcd` 
-    if(pathName.indexOf('/gameapi') !== -1){
+    if(pathName === 'gameapi'){
+        console
         try {
             if (!(await WebsocketHandling.getInstance().connectToLobby(lobbyCode, request, socket, upgradeHead))) {
                 socket.destroy();

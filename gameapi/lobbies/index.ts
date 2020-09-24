@@ -6,8 +6,8 @@ import { getAvailableCharacters, selectCharacter } from '../characters';
 import { moveDirection, useItem } from '../gamesession';
 import { isCharacterMovement, isLifeEffect } from '../types';
 import { request, Request, Response } from 'express';
-
-const url = require('url');
+import url from 'url';
+import db from '../../database';
 
 class WebsocketLobby {
     private ws: WebSocket.Server;
@@ -162,9 +162,12 @@ export class WebsocketHandling {
         this.lobbies[lobbyCode] = new WebsocketLobby();
     }
 
-    connectToLobby(lobbyCode: string, request: http.IncomingMessage, socket: net.Socket,
+    async connectToLobby(lobbyCode: string, request: http.IncomingMessage, socket: net.Socket,
         upgradeHead: Buffer) {
-        if (this.lobbies.hasOwnProperty(lobbyCode)) {
+        if ((await db('lobbies').where({code: lobbyCode})).length > 0) {
+            if(!this.lobbies.hasOwnProperty(lobbyCode)){
+                this.createLobby(lobbyCode);
+            }
             this.lobbies[lobbyCode].requestUpgrade(request, socket, upgradeHead);
 
             return true;
@@ -180,14 +183,16 @@ export class WebsocketHandling {
     }
 }
 
-export function lobbyHandling(request: Request, socket: net.Socket, upgradeHead: Buffer) {
-    const pathname: string = url.parse(request.url).pathname;
-    const lobbyCode = request.params['lobbyCode'];
+export async function lobbyHandling(request: Request, socket: net.Socket, upgradeHead: Buffer) {
+    const urlParse = url.parse(request.url);
+    const path = urlParse.pathname?.substring(1).split("/");
+    const pathName = path!![0] || "";
+    const lobbyCode = path!![1] || "";
 
     // Código de lobby va en la sig. parte del path `/gameapi/abcd` 
-    if(pathname.indexOf('/gameapi') !== -1){
+    if(pathName.indexOf('/gameapi') !== -1){
         try {
-            if (!WebsocketHandling.getInstance().connectToLobby(lobbyCode, request, socket, upgradeHead)) {
+            if (!(await WebsocketHandling.getInstance().connectToLobby(lobbyCode, request, socket, upgradeHead))) {
                 socket.destroy();
             }
         } catch (e) {

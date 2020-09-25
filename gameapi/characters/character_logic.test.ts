@@ -22,4 +22,8 @@ describe('Probar personajes disponibles', () => {
         expect(result.charactersAvailable[0]).toHaveProperty('physical');
         expect(result.charactersAvailable[0]).toHaveProperty('bravery');
     });
+
+    test('Check currently only one player online', async () => {
+        expect(await getAvailableCharacters('1234')).toHaveProperty('currentPlayers', 1);
+    })
 });

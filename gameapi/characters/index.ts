@@ -8,7 +8,7 @@ export async function getAvailableCharacters(lobbyCode: string) {
     const availableCharactersInfo = characters
         .filter(character => playerInfoQuery.findIndex(x => x.character_prototype_id === character.id) === -1)
         .map(characterData => ({
-            prototypeId: "a",
+            prototypeId: characterData.id,
             name: characterData.name,
             description: characterData.description,
             sanity: characterData.stats.sanity,

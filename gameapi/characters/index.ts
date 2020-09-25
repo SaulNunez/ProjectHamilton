@@ -1,6 +1,6 @@
 import db from '../../database';
 import { getCurrentPlayersInLobby } from '../../database/players';
-import { Character } from '../../gameassets/characters/character';
+import { Character } from '../../types';
 
 export async function getAvailableCharacters(lobbyCode: string) {
     const playersActive = await getCurrentPlayersInLobby(lobbyCode);

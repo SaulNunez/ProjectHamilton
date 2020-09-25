@@ -24,19 +24,6 @@ class WebsocketLobby {
                 console.log(`Message received: ${message}`);
 
                 switch (messageContents.type) {
-                    case 'enter_lobby':
-                        try {
-                            ws.send(JSON.stringify({
-                                type: 'lobby_joined',
-                                payload: await joinLobby(lobbyCode)
-                            }));
-                        } catch (e) {
-                            ws.send(JSON.stringify({
-                                type: 'lobby_joined',
-                                error: e.message
-                            }));
-                        }
-                        break;
                     case "get_available_characters":
                         try {
                             const availableCharacters = await getAvailableCharacters(lobbyCode);

@@ -1,6 +1,6 @@
-import {getAvailableCharacters} from './index';
+import {getAvailableCharacters} from '../gameapi/characters/index';
 
-jest.mock('../../database/players', () => ({
+jest.mock('../database/players', () => ({
     getCurrentPlayersInLobby: jest.fn().mockReturnValue([{
         prototypeId: 'gates'
     },

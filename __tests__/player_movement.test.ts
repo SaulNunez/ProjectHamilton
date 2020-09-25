@@ -1,5 +1,5 @@
-import db from '../../database';
-import { moveDirection } from './index';
+import db from '../database';
+import { moveDirection } from '../gameapi/gamesession/index';
 
 let playerId: string;
 

@@ -50,3 +50,7 @@ export type Character = {
     description: string,
     stats: Stats
 }
+
+export type LobbiesDb = {
+    code: string
+}

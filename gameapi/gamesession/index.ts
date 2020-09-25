@@ -1,5 +1,7 @@
 import { type } from "os";
 import db from "../../database";
+import { getPlayerInfo } from "../../database/players";
+import { getRoom, updatePosition } from "../../database/rooms";
 import { Items } from "../../gameassets/items/items";
 import { Room } from "../../gameassets/rooms/rooms";
 import { CharacterMovement, LanternEffect, LifeEffect, MovementInfo, DbPlayer, DbRoom } from "../types";
@@ -18,7 +20,7 @@ export type ItemUseOptions = {
 }
 
 export async function useItem(itemId: string, playerToken: string, lobbyCode: string, options: ItemUseOptions): Promise<LifeEffect | LanternEffect | CharacterMovement | undefined> {
-    if(!db('players').where({id: playerToken}).count('id')){
+    if (!db('players').where({ id: playerToken }).count('id')) {
         //On postgres count returns a string if value grater than the max for number
         throw 'Unauthorized action, playerToken not valid';
     }
@@ -29,22 +31,22 @@ export async function useItem(itemId: string, playerToken: string, lobbyCode: st
         const items: Items[] = require('../../gameassets/items');
         const item = items.find(item => item.id === itemDbEntry.items.prototype);
 
-        if(item?.id === 'lantern'){
+        if (item?.id === 'lantern') {
             //TODO: Make sure player doesn't have a battery yet
             return {
                 characterId: options.characterAffectedId || (await db('players').where({ id: playerToken }).select('character_prototype_id').first<{ character_prototype_id: string; }>()!!).character_prototype_id
             }
         }
 
-        if(item?.moves && options?.moveTo){
+        if (item?.moves && options?.moveTo) {
             return moveDirection(playerToken, options.moveTo);
         }
 
-        if(item?.statsChange){
-            if(item?.affectOtherPlayer && options.characterAffectedId){
-                const other = await db('players').where({character_prototype_id: options.characterAffectedId}).first();
-                
-                const intelligence =  other.intelligence + item.statsChange.intelligence;
+        if (item?.statsChange) {
+            if (item?.affectOtherPlayer && options.characterAffectedId) {
+                const other = await db('players').where({ character_prototype_id: options.characterAffectedId }).first();
+
+                const intelligence = other.intelligence + item.statsChange.intelligence;
                 const bravery = other.bravery + item.statsChange.bravery;
                 const physical = other.physical + item.statsChange.physical;
                 const sanity = other.sanity + item.statsChange.sanity;
@@ -69,7 +71,7 @@ export async function useItem(itemId: string, playerToken: string, lobbyCode: st
                 };
             }
 
-            const me = await db('players').where({id: playerToken}).first();
+            const me = await db('players').where({ id: playerToken }).first();
 
             const intelligence = me.intelligence + item.statsChange.intelligence;
             const bravery = me.bravery + item.statsChange.bravery;
@@ -96,17 +98,16 @@ export async function useItem(itemId: string, playerToken: string, lobbyCode: st
             };
         }
 
-        db('items').where({id: playerToken}).delete();
+        db('items').where({ id: playerToken }).delete();
     }
 }
 
-export async function moveDirection(playerToken: string, moveDirection: string): Promise<CharacterMovement>{
-    const playerEntry = await db('players').where({id: playerToken}).first<DbPlayer>();
-    if(playerEntry){
-        let x = playerEntry.x;
-        let y = playerEntry.y;
+export async function moveDirection(playerToken: string, moveDirection: string): Promise<CharacterMovement> {
+    const playerEntry = await getPlayerInfo(playerToken);
+    if (playerEntry) {
+        let { x, y } = playerEntry;
 
-        switch(moveDirection){
+        switch (moveDirection) {
             case 'right':
                 x++;
                 break;
@@ -120,43 +121,33 @@ export async function moveDirection(playerToken: string, moveDirection: string):
                 y--;
                 break;
             default:
-                throw "Movement is invalid";
+                throw new Error("Movement is invalid");
         }
 
-        const nextRoom = await db('rooms').where({
-            lobby_id: playerEntry.lobby_id, 
-            x, y, 
-            floor: playerEntry.floor
-        }).first();
-
-        const curentRoom = await db('rooms').where({
-            lobby_id: playerEntry.lobby_id, 
-            x: playerEntry.x, 
-            y: playerEntry.y, 
-            floor: playerEntry.floor
-        }).first<DbRoom>();
+        const nextRoom = await getRoom(playerEntry.lobby_id, x, y, playerEntry.floor);
+        const currentRoom = await getRoom(playerEntry.lobby_id, playerEntry.x, playerEntry.y, playerEntry.floor);
 
         let currentRoomPrototype: Room;
-        switch(playerEntry.floor){
+        switch (playerEntry.floor) {
             case TOP_FLOOR:
                 const topFloorList: Room[] = require('../../gameassets/rooms/second_floor.json');
-                currentRoomPrototype = topFloorList.find(x => x.id === curentRoom.proto_id)!!;
+                currentRoomPrototype = topFloorList.find(x => x.id === currentRoom!!.proto_id)!!;
                 break;
             case MAIN_FLOOR:
                 const mainFloorList: Room[] = require('../../gameassets/rooms/main_floor.json');
-                currentRoomPrototype = mainFloorList.find(x => x.id === curentRoom.proto_id)!!;
+                currentRoomPrototype = mainFloorList.find(x => x.id === currentRoom!!.proto_id)!!;
                 break;
             default:
                 const basementList: Room[] = require('../../gameassets/rooms/basement.json');
-                currentRoomPrototype = basementList.find(x => x.id === curentRoom.proto_id)!!;
+                currentRoomPrototype = basementList.find(x => x.id === currentRoom!!.proto_id)!!;
                 break;
         }
 
-        if(nextRoom){
+        if (nextRoom) {
             //We might be on the edge
             let nextRoomProtoype: Room;
 
-            switch(nextRoom.floor){
+            switch (nextRoom.floor) {
                 case TOP_FLOOR:
                     const topFloorList: Room[] = require('../../gameassets/rooms/second_floor.json');
                     nextRoomProtoype = topFloorList.find(x => x.id === nextRoom.proto_id)!!;
@@ -172,7 +163,7 @@ export async function moveDirection(playerToken: string, moveDirection: string):
             }
 
             let allowMove = false;
-            switch(moveDirection){
+            switch (moveDirection) {
                 case 'right':
                     allowMove = currentRoomPrototype?.adjacentRooms.right && nextRoomProtoype?.adjacentRooms.left;
                     break;
@@ -186,11 +177,11 @@ export async function moveDirection(playerToken: string, moveDirection: string):
                     allowMove = currentRoomPrototype?.adjacentRooms.bottom && nextRoomProtoype?.adjacentRooms.top;
                     break;
                 default:
-                    throw "Movement is invalid";
+                    throw new Error("Movement is invalid");
             }
 
-            if(allowMove){
-                await db('players').where({id: playerToken}).update({x, y});
+            if (allowMove) {
+                await updatePosition(playerToken, x, y, nextRoom.floor)
                 /*
                 let item = false;
                 let puzzle = false;
@@ -218,12 +209,12 @@ export async function moveDirection(playerToken: string, moveDirection: string):
                     }
                 }
             } else {
-                throw "Movement not allowed";
+                throw new Error("Movement not allowed");
             }
         } else {
-            throw "Next room not found";
+            throw new Error("Next room not found");
         }
     }
 
-    throw "Player not found";
+    throw new Error("Player not found");
 }

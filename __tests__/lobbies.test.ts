@@ -6,5 +6,5 @@ jest.mock('../database/lobbies', () => ({
 }));
 
 test('Creates lobby', async () => {
-    expect(await createLobby()).toHaveReturned();
+    expect(await createLobby()).toStrictEqual(expect.any(String));
 });

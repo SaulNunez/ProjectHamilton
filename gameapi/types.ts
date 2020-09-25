@@ -29,6 +29,7 @@ export function isLifeEffect(gameplayInfo: CharacterMovement | LifeEffect | Lant
 }
 
 export interface DbPlayer {
+    id: string,
     x: number, 
     y: number,
     lobby_id: string,
@@ -36,5 +37,9 @@ export interface DbPlayer {
 }
 
 export interface DbRoom {
-    proto_id: string
+    proto_id: string,
+    lobby_id: string,
+    x: number,
+    y: number,
+    floor: number
 }

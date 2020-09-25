@@ -11,35 +11,28 @@ import db from '../../database';
 
 class WebsocketLobby {
     private ws: WebSocket.Server;
-    constructor() {
+    private lobbyCode: string;
+
+    constructor(lobbyCode: string) {
         this.ws = new WebSocket.Server({ noServer: true });
+
+        this.lobbyCode = lobbyCode;
 
         this.ws.on('connection', (ws: WebSocket) => {
             ws.on('message', async (message: MessageEvent) => {
                 const messageContents = JSON.parse(message.toString());
                 console.log(`Message received: ${message}`);
 
-                const { lobbyCode } = messageContents.payload;
-
                 switch (messageContents.type) {
-                    case 'enter_lobby':
-                        try {
-                            ws.send(JSON.stringify({
-                                type: 'lobby_joined',
-                                payload: await joinLobby(lobbyCode)
-                            }));
-                        } catch (e) {
-                            ws.send(JSON.stringify({
-                                type: 'lobby_joined',
-                                error: e.message
-                            }));
-                        }
-                        break;
                     case "get_available_characters":
                         try {
+                            const availableCharacters = await getAvailableCharacters(lobbyCode);
+
+                            console.debug(availableCharacters);
+                            
                             ws.send(JSON.stringify({
                                 type: 'available_characters_update',
-                                payload: await getAvailableCharacters(lobbyCode)
+                                payload: availableCharacters
                             }));
                         } catch (error) {
                             ws.send(JSON.stringify({
@@ -50,7 +43,7 @@ class WebsocketLobby {
                         break;
                     case "select_character":
                         try {
-                            const { displayName, character, lobbyCode } = messageContents.payload;
+                            const { displayName, character } = messageContents.payload;
 
                             const characterSelected = await selectCharacter(lobbyCode, displayName, character);
                             ws.send(JSON.stringify({
@@ -159,7 +152,7 @@ export class WebsocketHandling {
     }
 
     createLobby(lobbyCode: string) {
-        this.lobbies[lobbyCode] = new WebsocketLobby();
+        this.lobbies[lobbyCode] = new WebsocketLobby(lobbyCode);
     }
 
     async connectToLobby(lobbyCode: string, request: http.IncomingMessage, socket: net.Socket,

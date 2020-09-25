@@ -1,4 +1,5 @@
 import { PuzzleType } from "./gameassets/puzzles";
+import { Stats } from "./gameassets/rooms/rooms";
 
 export type PuzzleFunctionCheck = {
     name: string,
@@ -37,4 +38,19 @@ export type PuzzleCheckResult = {
     correct: boolean,
     output: string,
     errors?: string
+}
+
+export type PlayersDb =  {
+    character_prototype_id: string
+}
+
+export type Character = {
+    id: string,
+    name: string,
+    description: string,
+    stats: Stats
+}
+
+export type LobbiesDb = {
+    code: string
 }

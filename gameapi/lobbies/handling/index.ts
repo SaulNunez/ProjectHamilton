@@ -2,6 +2,7 @@ import { Room } from "../../../gameassets/rooms/rooms";
 import { v4 as uuidv4 } from 'uuid';
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../../gamesession/constants';
 import db from "../../../database";
+import { createLobbyInDb } from "../../../database/lobbies";
 
 function populateFloor(lobbyCode: string, floorRooms: Room[], floorToPopulate: number) {
     const mainFloorOutline = [[0, 0]];
@@ -68,8 +69,9 @@ function createRooms(lobbyCode: string) {
 export async function createLobby() {
     try {
         let lobbyCode = Math.random().toString(36).substring(7);
-        await db.insert({ code: lobbyCode }, ['code']).into("lobbies");
-        createRooms(lobbyCode);
+        await createLobbyInDb(lobbyCode);
+        //TODO: Mover logica de crear cuartos
+        //createRooms(lobbyCode);
 
         return lobbyCode;
     } catch (e) {
@@ -79,7 +81,7 @@ export async function createLobby() {
     return null;
 }
 
-export async function joinLobby(lobbyCode: string) {
+/* export async function joinLobby(lobbyCode: string) {
     const results = await db('lobbies').select('code').where({ code: lobbyCode });
 
     if (results.length > 0) {
@@ -103,4 +105,4 @@ export async function joinLobby(lobbyCode: string) {
     }
     
     throw 'There\'s no lobby found with that code';
-}
+} */

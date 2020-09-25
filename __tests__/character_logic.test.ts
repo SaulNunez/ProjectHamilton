@@ -1,14 +1,11 @@
-import {getAvailableCharacters} from './index';
-import db from '../../database';
+import {getAvailableCharacters} from '../gameapi/characters/index';
 
-beforeAll(async () => {
-    db.migrate.latest();
-    await db.insert({ code: '1234' }).into("lobbies");
-  });
-
-afterAll(async () => {
-    await db('lobbies').where({ code: '1234' }).delete();
-});
+jest.mock('../database/players', () => ({
+    getCurrentPlayersInLobby: jest.fn().mockReturnValue([{
+        prototypeId: 'gates'
+    },
+])
+}));
 
 describe('Probar personajes disponibles', () => {
     test('Informacion de personajes disponibles tiene las entradas necesarias',async () => {
@@ -25,4 +22,8 @@ describe('Probar personajes disponibles', () => {
         expect(result.charactersAvailable[0]).toHaveProperty('physical');
         expect(result.charactersAvailable[0]).toHaveProperty('bravery');
     });
+
+    test('Check currently only one player online', async () => {
+        expect(await getAvailableCharacters('1234')).toHaveProperty('currentPlayers', 1);
+    })
 });

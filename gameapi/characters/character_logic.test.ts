@@ -1,14 +1,11 @@
 import {getAvailableCharacters} from './index';
-import db from '../../database';
 
-beforeAll(async () => {
-    db.migrate.latest();
-    await db.insert({ code: '1234' }).into("lobbies");
-  });
-
-afterAll(async () => {
-    await db('lobbies').where({ code: '1234' }).delete();
-});
+jest.mock('../../database/players', () => ({
+    getCurrentPlayersInLobby: jest.fn().mockReturnValue([{
+        prototypeId: 'gates'
+    },
+])
+}));
 
 describe('Probar personajes disponibles', () => {
     test('Informacion de personajes disponibles tiene las entradas necesarias',async () => {

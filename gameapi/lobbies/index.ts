@@ -39,9 +39,13 @@ class WebsocketLobby {
                         break;
                     case "get_available_characters":
                         try {
+                            const availableCharacters = await getAvailableCharacters(lobbyCode);
+
+                            console.debug(availableCharacters);
+                            
                             ws.send(JSON.stringify({
                                 type: 'available_characters_update',
-                                payload: await getAvailableCharacters(lobbyCode)
+                                payload: availableCharacters
                             }));
                         } catch (error) {
                             ws.send(JSON.stringify({

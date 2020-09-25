@@ -1,5 +1,5 @@
-import { createLobby } from ".";
 import db from "../../database";
+import { createLobby } from "./handling";
 
 beforeAll(() => {
     db.migrate.latest();

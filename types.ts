@@ -38,3 +38,7 @@ export type PuzzleCheckResult = {
     output: string,
     errors?: string
 }
+
+export type PlayersDb =  {
+    character_prototype_id: string
+}

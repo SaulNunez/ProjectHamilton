@@ -1,24 +1,25 @@
 import db from '../../database';
+import { getCurrentPlayersInLobby } from '../../database/players';
 import { Character } from '../../gameassets/characters/character';
 
 export async function getAvailableCharacters(lobbyCode: string) {
-    const playerInfoQuery: {character_prototype_id: string}[] = await db('players').select('character_prototype_id').where({ lobby_id: lobbyCode });
+    const playersActive = await getCurrentPlayersInLobby(lobbyCode);
     const characters: Character[] = require('../../gameassets/characters');
 
     const availableCharactersInfo = characters
-        .filter(character => playerInfoQuery.findIndex(x => x.character_prototype_id === character.id) === -1)
-        .map(characterData => ({
-            prototypeId: characterData.id,
-            name: characterData.name,
-            description: characterData.description,
-            sanity: characterData.stats.sanity,
-            intelligence: characterData.stats.intelligence,
-            physical: characterData.stats.physical,
-            bravery: characterData.stats.bravery
+        .filter(character => !playersActive.find(pa => pa.character_prototype_id === character.id))
+        .map(charData => ({
+            prototypeId: charData.id,
+            name: charData.name,
+            description: charData.description,
+            sanity: charData.stats.sanity,
+            intelligence: charData.stats.intelligence,
+            physical: charData.stats.physical,
+            bravery: charData.stats.bravery
         }));
 
     return {
-        currentPlayers: playerInfoQuery.length,
+        currentPlayers: playersActive.length,
         charactersAvailable: availableCharactersInfo
     };
 

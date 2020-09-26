@@ -1,22 +1,19 @@
 import * as WebSocket from 'ws';
 import * as http from 'http';
 import * as net from 'net';
-import { joinLobby } from './handling';
 import { getAvailableCharacters, selectCharacter } from '../characters';
 import { moveDirection, useItem } from '../gamesession';
 import { isCharacterMovement, isLifeEffect } from '../types';
-import { request, Request, Response } from 'express';
+import { Request } from 'express';
 import url from 'url';
 import db from '../../database';
 
 class WebsocketLobby {
     private ws: WebSocket.Server;
-    private lobbyCode: string;
 
     constructor(lobbyCode: string) {
         this.ws = new WebSocket.Server({ noServer: true });
 
-        this.lobbyCode = lobbyCode;
 
         this.ws.on('connection', (ws: WebSocket) => {
             ws.on('message', async (message: MessageEvent) => {
@@ -132,7 +129,6 @@ class WebsocketLobby {
     }
 }
 
-const FIVE_MINUTES = 5 * 60 * 1000;
 export class WebsocketHandling {
     private lobbies: { [key: string]: WebsocketLobby } = {};
 

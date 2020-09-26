@@ -1,5 +1,6 @@
 import { WebsocketHandling } from ".";
-import db from "../../database";
+import { checkIfLobbyExists } from "../../database/lobbies";
+import { getCurrentPlayerCountInLobby } from "../../database/players";
 
 export enum SessionStartResult{
     Sucess = 'success',
@@ -8,12 +9,12 @@ export enum SessionStartResult{
 }
 
 export async function startSession(lobbyCode: string) {
-    const lobbyExists = await db('lobbies').where({code: lobbyCode}).update({play_is_active: true}, ['code']);
-    if(lobbyExists.length === 0){
+    const lobbyExists = await checkIfLobbyExists(lobbyCode);
+    if(!lobbyExists){
         return SessionStartResult.LobbyNotFound;
     }
 
-    const playersCountInLobby = await db('players').where({lobby_id: lobbyCode}).count();
+    const playersCountInLobby = await getCurrentPlayerCountInLobby(lobbyCode);
     if(!playersCountInLobby){
         return SessionStartResult.NotEnoughPlayers;
     }

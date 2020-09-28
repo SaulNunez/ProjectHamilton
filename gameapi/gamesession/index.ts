@@ -3,8 +3,7 @@ import db from "../../database";
 import { getPlayerInfo } from "../../database/players";
 import { getRoom, updatePosition } from "../../database/rooms";
 import { Items } from "../../gameassets/items/items";
-import { Room } from "../../gameassets/rooms/rooms";
-import { CharacterMovement, LanternEffect, LifeEffect, MovementInfo, DbPlayer, DbRoom } from "../types";
+import { CharacterMovement, LanternEffect, LifeEffect, Room } from "../../types";
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from './constants';
 
 export enum Direction {

@@ -1,6 +1,5 @@
 import db from "..";
-import { DbPlayer, DbRoom } from "../../gameapi/types";
-import { PlayersDb } from "../../types";
+import { DbPlayer, DbRoom, PlayersDb } from "../../types";
 
 export async function getRoom(lobby: string, x: number, y: number, floor: number){
     return await db.where({lobby_id: lobby, x, y, floor}).from<DbRoom>('rooms').first();

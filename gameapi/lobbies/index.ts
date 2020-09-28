@@ -3,11 +3,11 @@ import * as http from 'http';
 import * as net from 'net';
 import { getAvailableCharacters, selectCharacter } from '../characters';
 import { moveDirection, useItem } from '../gamesession';
-import { isCharacterMovement, isLifeEffect } from '../types';
 import { Request } from 'express';
 import url from 'url';
 import db from '../../database';
 import { playerCanDoPuzzle, puzzleIsCorrect } from '../puzzles/check_puzzle';
+import { isCharacterMovement, isLifeEffect } from '../../types';
 
 class WebsocketLobby {
     private wss: WebSocket.Server;

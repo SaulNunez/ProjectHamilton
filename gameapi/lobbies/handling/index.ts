@@ -1,8 +1,8 @@
-import { Room } from "../../../gameassets/rooms/rooms";
 import { v4 as uuidv4 } from 'uuid';
 import { TOP_FLOOR, BASEMENT, MAIN_FLOOR } from '../../gamesession/constants';
 import db from "../../../database";
 import { createLobbyInDb } from "../../../database/lobbies";
+import { Room } from '../../../types';
 
 function populateFloor(lobbyCode: string, floorRooms: Room[], floorToPopulate: number) {
     const mainFloorOutline = [[0, 0]];

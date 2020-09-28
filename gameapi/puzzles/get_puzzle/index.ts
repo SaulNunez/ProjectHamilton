@@ -1,8 +1,7 @@
 import db from "../../../database";
 import { PuzzleType } from "../../../gameassets/puzzles";
-import { PuzzleInfo } from "../types";
 import puzzles from '../../../gameassets/puzzles';
-import { PuzzleDb } from "../../../types";
+import { PuzzleDb, PuzzleInfo } from "../../../types";
 
 const ONE_MINUTE = 60 * 1000;
 

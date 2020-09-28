@@ -75,10 +75,7 @@ Iniciar partida del lobby code dado.
 #### Input
 ```json
 {
-    "type":"get_available_characters",
-    "payload": {
-        "lobbyCode": "abcd"
-    }
+    "type":"get_available_characters"
 }
 ```
 
@@ -272,7 +269,7 @@ Ver información de output de jugadores disponibles por detalles de API.
 * `documentation`: Si tiene dudas, el jugador puede acudir a esto para ver como resolver sus dudas. Tiene HTML.
 * `initialWorkspace`: XML de workspace de Blockly a mostrar cuando se abrá el workspace.
 
-#### Respuesta del jugador a mandar al servidor
+#### Respuesta del jugador al puzzle
 ```json
 {
     "type": "puzzle_response",
@@ -283,5 +280,18 @@ Ver información de output de jugadores disponibles por detalles de API.
     }
 }
 ```
+
 * `code`: Código Javascript generado.
 * `puzzleId`: Código identificador del puzzle.
+
+# Resultado de prueba de que respuesta de puzzle este correcta
+```json
+{
+    type: "player_moved",
+    payload: {
+        errors: [],
+        output: ["Hola mundo"]
+        correct: true
+    }
+}
+```

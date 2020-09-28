@@ -41,5 +41,6 @@ export interface DbRoom {
     lobby_id: string,
     x: number,
     y: number,
-    floor: number
+    floor: number,
+    playerActionAvailable: boolean
 }

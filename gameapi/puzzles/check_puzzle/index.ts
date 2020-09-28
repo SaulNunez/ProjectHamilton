@@ -1,8 +1,23 @@
 import fetch from 'node-fetch';
+import { getCurrentPlayerRoom } from '../../../database/rooms';
 import puzzle, { PuzzleType } from '../../../gameassets/puzzles';
 import { PuzzleCheckResult, PuzzleCheckResultMicroservice } from '../../../types';
 
 const CODE_CHECK_URL = process.env.CODE_CHECK_URL || 'https://hamilton-microservice.herokuapp.com/';
+
+
+export async function playerCanDoPuzzle(playerToken: string){
+    // El jugador puede tomar un puzzle cuando:
+    // - Esta en un cuarto que pide puzzle para dar recompensa
+    let roomWithGoodiesInfo =  await getCurrentPlayerRoom(playerToken);
+    let onRoomWithGoodies = false;
+
+    if(roomWithGoodiesInfo){
+        onRoomWithGoodies = roomWithGoodiesInfo.playerActionAvailable;
+    }
+
+    return onRoomWithGoodies;
+}
 
 export async function puzzleIsCorrect(code: string, puzzleId: string): Promise<PuzzleCheckResult>{
     const puzzleInfo = puzzle.find(p => p.id === puzzleId);

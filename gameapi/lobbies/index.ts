@@ -7,15 +7,16 @@ import { isCharacterMovement, isLifeEffect } from '../types';
 import { Request } from 'express';
 import url from 'url';
 import db from '../../database';
+import { playerCanDoPuzzle, puzzleIsCorrect } from '../puzzles/check_puzzle';
 
 class WebsocketLobby {
-    private ws: WebSocket.Server;
+    private wss: WebSocket.Server;
 
     constructor(lobbyCode: string) {
-        this.ws = new WebSocket.Server({ noServer: true });
+        this.wss = new WebSocket.Server({ noServer: true });
 
 
-        this.ws.on('connection', (ws: WebSocket) => {
+        this.wss.on('connection', (ws: WebSocket) => {
             ws.on('message', async (message: MessageEvent) => {
                 const messageContents = JSON.parse(message.toString());
                 console.log(`Message received: ${message}`);
@@ -51,7 +52,7 @@ class WebsocketLobby {
                                 type: 'player_selected_character',
                                 payload: await getAvailableCharacters(lobbyCode)
                             });
-                            this.ws.clients.forEach((client) => {
+                            this.wss.clients.forEach((client) => {
                                 if (client !== ws && client.readyState === WebSocket.OPEN) {
                                     client.send(charactersUpdateInfo);
                                 }
@@ -97,7 +98,7 @@ class WebsocketLobby {
                                 const characterPositionUpdate = JSON.stringify({
                                     type: 'player_moved',
                                 });
-                                this.ws.clients.forEach((client) => {
+                                this.wss.clients.forEach((client) => {
                                     if (client.readyState === WebSocket.OPEN) {
                                         client.send(characterPositionUpdate);
                                     }
@@ -111,6 +112,26 @@ class WebsocketLobby {
                         }
                         break;
                     case "puzzle_solved":
+                        try {
+                            const {code, puzzleId, playerToken} = messageContents.payload;
+
+                            if((await playerCanDoPuzzle(playerToken))){
+                                let puzzleResult = await puzzleIsCorrect(code, puzzleId);
+
+                                ws.send(JSON.stringify({
+                                    type: 'puzzle_solved',
+                                    payload: {
+                                        errors: puzzleResult.errors || '',
+                                        ...puzzleResult
+                                    }
+                                }));
+                            }
+                        } catch(e){
+                            ws.send(JSON.stringify({
+                                type: 'player_moved',
+                                error: e.message
+                            }));
+                        }
                         break;
                 }
             });
@@ -119,13 +140,13 @@ class WebsocketLobby {
 
     requestUpgrade(request: http.IncomingMessage, socket: net.Socket,
         upgradeHead: Buffer) {
-        this.ws.handleUpgrade(request, socket, upgradeHead, (ws) => {
-            this.ws.emit('connection', ws, request);
+        this.wss.handleUpgrade(request, socket, upgradeHead, (ws) => {
+            this.wss.emit('connection', ws, request);
         });
     }
 
     broascast(message: string){
-        this.ws.clients.forEach(client => client.send(message));
+        this.wss.clients.forEach(client => client.send(message));
     }
 }
 
